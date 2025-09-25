@@ -38,7 +38,12 @@ HANDLE OpenTwinCatProcess(HWND hListBox);
 int GetListBoxItemCount(HWND hListBox);
 bool ExtractTreeItem(HANDLE hProcess, HWND hListBox, int index, TreeItem* item);
 void PrintTreeStructure(TreeItem* items, int count);
-bool ExpandAllFolders(HWND hListBox);
+bool ExpandAllFolders(HWND hListBox, HANDLE hProcess);
+bool CloseFolder(HWND hListBox, int index);
 bool FocusOnItem(HWND hListBox, int index);
+bool ExtractTargetFromTitle(const char* windowTitle, char* targetText, int maxLength);
+int SearchInLevel(TreeItem* items, int count, const char* searchText);
+int FindAndOpenPath(HWND hListBox, HANDLE hProcess, const char* searchText);
+int FindItemByText(TreeItem* items, int count, const char* searchText);
 
 #endif // TWINCAT_NAVIGATOR_H
