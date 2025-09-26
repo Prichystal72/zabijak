@@ -10,6 +10,7 @@
 #define TEXT_POINTER_OFFSET 20
 #define MAX_TEXT_LENGTH 256
 #define MAX_ITEMS 200
+#define STRUCT_FIELD_COUNT 16
 
 // Typy položek podle flags
 #define FLAG_FOLDER   0x3604FD  // Rozbalitelné složky  
@@ -21,12 +22,17 @@
 typedef struct {
     int index;              // Index v ListBoxu
     char text[MAX_TEXT_LENGTH]; // Text položky
-    DWORD itemData;         // Pointer na ItemData strukturu
-    DWORD textPtr;          // Pointer na text v paměti
-    DWORD position;         // Pozice v hierarchii
+    DWORD_PTR itemData;     // Pointer na ItemData strukturu
+    DWORD_PTR textPtr;      // Pointer na text v paměti (pokud je dostupný)
+    DWORD raw[STRUCT_FIELD_COUNT]; // Surová data struktury pro analýzu
+    int rawCount;           // Počet platných DWORD hodnot
+    DWORD position;         // Pozice v hierarchii (odhad)
     DWORD flags;            // Typ položky
-    DWORD hasChildren;      // Má podpoložky
     int level;              // Úroveň odsazení
+    int hasChildren;        // Má podpoložky
+    int parentIndex;        // Index rodiče v poli položek
+    int firstChild;         // Index prvního dítěte
+    int nextSibling;        // Index dalšího sourozence
     const char* type;       // Typ jako string
     const char* icon;       // Ikona
 } TreeItem;
