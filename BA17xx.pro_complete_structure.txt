@@ -1,0 +1,568 @@
+=== KOMPLETNÍ STRUKTURA PROJEKTU ===
+Soubor: C:\Users\ept\Desktop\PLC\BA17xx.pro
+Celkem elementů: 141
+
+[ (PRG)] BOOLARRAY_TO_BYTE
+   Cesta: BOOLARRAY_TO_BYTE
+   Pozice: 943725
+
+[ (PRG)] BOOLARRAY_TO_DWORD
+   Cesta: BOOLARRAY_TO_DWORD
+   Pozice: 944385
+
+[ (PRG)] BOOLARRAY_TO_WORD
+   Cesta: BOOLARRAY_TO_WORD
+   Pozice: 945064
+
+[ (PRG)] BYTEARRAY_TO_STRING_WITH_DELIMITER
+   Cesta: BYTEARRAY_TO_STRING_WITH_DELIMITER
+   Pozice: 945742
+
+[ (PRG)] CheckBounds
+   Cesta: CheckBounds
+   Pozice: 946786
+
+[ (PRG)] CheckDivByte
+   Cesta: CheckDivByte
+   Pozice: 947219
+
+[ (PRG)] CheckDivDWord
+   Cesta: CheckDivDWord
+   Pozice: 947559
+
+[ (PRG)] CheckDivReal
+   Cesta: CheckDivReal
+   Pozice: 947904
+
+[ (PRG)] CheckDivWord
+   Cesta: CheckDivWord
+   Pozice: 948243
+
+[ (PRG)] CheckRangeSigned
+   Cesta: CheckRangeSigned
+   Pozice: 948584
+
+[ (PRG)] CheckRangeUnsigned
+   Cesta: CheckRangeUnsigned
+   Pozice: 949069
+
+[ (PRG)] DT_TO_SPECIALSTRING_YYYY_MM
+   Cesta: DT_TO_SPECIALSTRING_YYYY_MM
+   Pozice: 949581
+
+[ (PRG)] ET_TO_STRING
+   Cesta: ET_TO_STRING
+   Pozice: 950644
+
+[ (PRG)] F_rSign
+   Cesta: F_rSign
+   Pozice: 951012
+
+[ (PRG)] F_Servobandeinzug_Strecke_zu_Grad
+   Cesta: F_Servobandeinzug_Strecke_zu_Grad
+   Pozice: 951288
+
+[ (PRG)] F_Startpos_Servobandeinzug
+   Cesta: F_Startpos_Servobandeinzug
+   Pozice: 951716
+
+[ (PRG)] F_Vergleich_LReal
+   Cesta: F_Vergleich_LReal
+   Pozice: 952371
+
+[ (PRG)] F_Vergleich_Real
+   Cesta: F_Vergleich_Real
+   Pozice: 952765
+
+[ (FB)] FB_2OrdnerMitDateiErstellen
+   Cesta: FB_2OrdnerMitDateiErstellen
+   Pozice: 953159
+
+[ (FB)] FB_Datei_erstellen
+   Cesta: FB_Datei_erstellen
+   Pozice: 965944
+
+[ (FB)] FB_EtherCatDiag
+   Cesta: FB_EtherCatDiag
+   Pozice: 978542
+
+[ (FB)] FB_ExporString
+   Cesta: FB_ExporString
+   Pozice: 989779
+
+[ (FB)] FB_StartWinProcess
+   Cesta: FB_StartWinProcess
+   Pozice: 993337
+
+[ (FB)] FB_XMLFileCopy
+   Cesta: FB_XMLFileCopy
+   Pozice: 1006742
+
+[ (PRG)] MAIN_BBGen
+   Cesta: MAIN_BBGen
+   Pozice: 1016701
+
+[ (PRG)] MAIN_FAST
+   Cesta: MAIN_FAST
+   Pozice: 1017641
+
+[ (PRG)] MAIN_STANDARD
+   Cesta: MAIN_STANDARD
+   Pozice: 1025480
+
+[ (FB)] ReadAdsStruct
+   Cesta: ReadAdsStruct
+   Pozice: 1067401
+
+[ (PRG)] Scale
+   Cesta: Scale
+   Pozice: 1071034
+
+[ (PRG)] ST_AbfallBlasluft
+   Cesta: ST_AbfallBlasluft
+   Pozice: 1071660
+
+[ (FB)] ST_ADS_Kommunikation
+   Cesta: ST_ADS_Kommunikation
+   Pozice: 1072241
+
+[ (FB)] ST_AnalogIn
+   Cesta: ST_AnalogIn
+   Pozice: 1076785
+
+[ (FB)] ST_AnalogOut
+   Cesta: ST_AnalogOut
+   Pozice: 1081321
+
+[ (PRG)] ST_Anwahl_Bandeinzug
+   Cesta: ST_Anwahl_Bandeinzug
+   Pozice: 1085859
+
+[ (PRG)] ST_AutoCheckIn
+   Cesta: ST_AutoCheckIn
+   Pozice: 1088512
+
+[ (FB)] ST_AxisJobCtrl_Cam_Gear
+   Cesta: ST_AxisJobCtrl_Cam_Gear
+   Pozice: 1095030
+
+[ (FB)] ST_AxisJobCtrl_Motion
+   Cesta: ST_AxisJobCtrl_Motion
+   Pozice: 1114668
+
+[ (FB)] ST_BalluffTagReader
+   Cesta: ST_BalluffTagReader
+   Pozice: 1168486
+
+[ (PRG)] ST_Bandeinzug_Kontroller_1700
+   Cesta: ST_Bandeinzug_Kontroller_1700
+   Pozice: 1182056
+
+[ (PRG)] ST_Bandeinzug_Kontroller_1720
+   Cesta: ST_Bandeinzug_Kontroller_1720
+   Pozice: 1197301
+
+[ (FB)] ST_Bandoeler
+   Cesta: ST_Bandoeler
+   Pozice: 1211308
+
+[ (PRG)] ST_BandoelerZylinder
+   Cesta: ST_BandoelerZylinder
+   Pozice: 1221766
+
+[ (PRG)] ST_Bandwechsel_Kontroller
+   Cesta: ST_Bandwechsel_Kontroller
+   Pozice: 1237438
+
+[ (FB)] ST_Barcode
+   Cesta: ST_Barcode
+   Pozice: 1297071
+
+[ (FB)] ST_BarcodeReader
+   Cesta: ST_BarcodeReader
+   Pozice: 1325484
+
+[ (PRG)] ST_BBGen
+   Cesta: ST_BBGen
+   Pozice: 1337310
+
+[ (FB)] ST_BBGenWriteFile
+   Cesta: ST_BBGenWriteFile
+   Pozice: 1402107
+
+[ (FB)] ST_BBGenXMLFile
+   Cesta: ST_BBGenXMLFile
+   Pozice: 1408017
+
+[ (FB)] ST_BerechnungOverride
+   Cesta: ST_BerechnungOverride
+   Pozice: 1417772
+
+[ (PRG)] ST_Bestueckachse
+   Cesta: ST_Bestueckachse
+   Pozice: 1422338
+
+[ (PRG)] ST_Betriebsarten
+   Cesta: ST_Betriebsarten
+   Pozice: 1475393
+
+[ (FB)] ST_Betriebsartenwechsel
+   Cesta: ST_Betriebsartenwechsel
+   Pozice: 1481638
+
+[ (PRG)] ST_Betriebsfreigaben
+   Cesta: ST_Betriebsfreigaben
+   Pozice: 1485040
+
+[ (FB)] ST_Betriebsstundenzaehler
+   Cesta: ST_Betriebsstundenzaehler
+   Pozice: 1492810
+
+[ (FB)] ST_Blinker
+   Cesta: ST_Blinker
+   Pozice: 1494074
+
+[ (FB)] ST_Camtable_Maker
+   Cesta: ST_Camtable_Maker
+   Pozice: 1494547
+
+[ (PRG)] ST_Check_Modulopos
+   Cesta: ST_Check_Modulopos
+   Pozice: 1508106
+
+[ (FB)] ST_CommandHistory
+   Cesta: ST_CommandHistory
+   Pozice: 1508778
+
+[ (PRG)] ST_Datainit_Achsen
+   Cesta: ST_Datainit_Achsen
+   Pozice: 1509361
+
+[ (PRG)] ST_Datainit_Fast_Zylinder
+   Cesta: ST_Datainit_Fast_Zylinder
+   Pozice: 1520061
+
+[ (PRG)] ST_Datainit_Stationen
+   Cesta: ST_Datainit_Stationen
+   Pozice: 1530131
+
+[ (PRG)] ST_Datainit_Zylinder
+   Cesta: ST_Datainit_Zylinder
+   Pozice: 1551833
+
+[ (PRG)] ST_Doppelrollenbandoeler
+   Cesta: ST_Doppelrollenbandoeler
+   Pozice: 1592644
+
+[ (FB)] ST_Einfachhaspelkontroller
+   Cesta: ST_Einfachhaspelkontroller
+   Pozice: 1603185
+
+[ (PRG)] ST_Einpress_Kontroller
+   Cesta: ST_Einpress_Kontroller
+   Pozice: 1612682
+
+[ (PRG)] ST_Einpress_Kontroller_alt
+   Cesta: ST_Einpress_Kontroller_alt
+   Pozice: 1629250
+
+[ (PRG)] ST_Einzelbandoeler
+   Cesta: ST_Einzelbandoeler
+   Pozice: 1650134
+
+[ (PRG)] ST_EthercatDiag
+   Cesta: ST_EthercatDiag
+   Pozice: 1660463
+
+[ (PRG)] ST_Euchner_Handbedienpult
+   Cesta: ST_Euchner_Handbedienpult
+   Pozice: 1664375
+
+[ (FB)] ST_Export_String
+   Cesta: ST_Export_String
+   Pozice: 1665383
+
+[ (FB)] ST_Flasher
+   Cesta: ST_Flasher
+   Pozice: 1669804
+
+[ (PRG)] ST_Gesamthubzaehler
+   Cesta: ST_Gesamthubzaehler
+   Pozice: 1670322
+
+[ (FB)] ST_GetAdaptersInfo
+   Cesta: ST_GetAdaptersInfo
+   Pozice: 1671249
+
+[ (FB)] ST_GetLocalAMSNetID
+   Cesta: ST_GetLocalAMSNetID
+   Pozice: 1674979
+
+[ (PRG)] ST_Haspel_Kontroller_2H
+   Cesta: ST_Haspel_Kontroller_2H
+   Pozice: 1679484
+
+[ (PRG)] ST_Haspel_Kontroller_4H
+   Cesta: ST_Haspel_Kontroller_4H
+   Pozice: 1689976
+
+[ (FB)] ST_Haspel_st_zylinder
+   Cesta: ST_Haspel_st_zylinder
+   Pozice: 1700077
+
+[ (FB)] ST_Haspel_V2
+   Cesta: ST_Haspel_V2
+   Pozice: 1711071
+
+[ (PRG)] ST_Hublift_links
+   Cesta: ST_Hublift_links
+   Pozice: 1728734
+
+[ (PRG)] ST_Hublift_rechts
+   Cesta: ST_Hublift_rechts
+   Pozice: 1753405
+
+[ (PRG)] ST_Konvertiere_gelese_TagData
+   Cesta: ST_Konvertiere_gelese_TagData
+   Pozice: 1775233
+
+[ (FB)] ST_Kurvenscheibeneditor
+   Cesta: ST_Kurvenscheibeneditor
+   Pozice: 1777365
+
+[ (PRG)] ST_LampeMaterialMangel
+   Cesta: ST_LampeMaterialMangel
+   Pozice: 1788198
+
+[ (PRG)] ST_Lesen_Schreiben_Tag
+   Cesta: ST_Lesen_Schreiben_Tag
+   Pozice: 1789960
+
+[ (PRG)] ST_Markiere_WT_IO
+   Cesta: ST_Markiere_WT_IO
+   Pozice: 1809200
+
+[ (PRG)] ST_Markiere_WT_NIO
+   Cesta: ST_Markiere_WT_NIO
+   Pozice: 1812783
+
+[ (PRG)] ST_Menzel_Spruehoeler
+   Cesta: ST_Menzel_Spruehoeler
+   Pozice: 1814610
+
+[ (PRG)] ST_Message_Produktion
+   Cesta: ST_Message_Produktion
+   Pozice: 1825753
+
+[ (FB)] ST_MFCalcConstPhase
+   Cesta: ST_MFCalcConstPhase
+   Pozice: 1829074
+
+[ (FB)] ST_MFcalcConstVelo
+   Cesta: ST_MFcalcConstVelo
+   Pozice: 1850519
+
+[ (FB)] ST_MFMaxMasterVelo
+   Cesta: ST_MFMaxMasterVelo
+   Pozice: 1859920
+
+[ (PRG)] ST_MotionFunctionPoints
+   Cesta: ST_MotionFunctionPoints
+   Pozice: 1871441
+
+[ (FB)] ST_Nockenschaltwerk_int
+   Cesta: ST_Nockenschaltwerk_int
+   Pozice: 1900117
+
+[ (FB)] ST_Nockenschaltwerk_lreal
+   Cesta: ST_Nockenschaltwerk_lreal
+   Pozice: 1909302
+
+[ (FB)] ST_Nockenzaehlwerk
+   Cesta: ST_Nockenzaehlwerk
+   Pozice: 1925244
+
+[ (FB)] ST_OT_UT_Ueberwachung
+   Cesta: ST_OT_UT_Ueberwachung
+   Pozice: 1926883
+
+[ (PRG)] ST_Rafl_Stoerungen_Quitt
+   Cesta: ST_Rafl_Stoerungen_Quitt
+   Pozice: 1929179
+
+[ (PRG)] ST_Rasterfolieneinzug
+   Cesta: ST_Rasterfolieneinzug
+   Pozice: 1949419
+
+[ (PRG)] ST_Rasterfolienmontage
+   Cesta: ST_Rasterfolienmontage
+   Pozice: 1969156
+
+[ (PRG)] ST_RoutingBackpanel
+   Cesta: ST_RoutingBackpanel
+   Pozice: 1986068
+
+[ (PRG)] ST_RoutingNachbarPC
+   Cesta: ST_RoutingNachbarPC
+   Pozice: 2002760
+
+[ (PRG)] ST_Safetyprogramm
+   Cesta: ST_Safetyprogramm
+   Pozice: 2017528
+
+[ (PRG)] ST_SaveAndLoad
+   Cesta: ST_SaveAndLoad
+   Pozice: 2040354
+
+[ (PRG)] ST_Schreibe_LastUsedTool
+   Cesta: ST_Schreibe_LastUsedTool
+   Pozice: 2051594
+
+[ (PRG)] ST_Schreibe_Persistente_Daten
+   Cesta: ST_Schreibe_Persistente_Daten
+   Pozice: 2052810
+
+[ (PRG)] ST_Scope
+   Cesta: ST_Scope
+   Pozice: 2057709
+
+[ (PRG)] ST_Servobandeinzug
+   Cesta: ST_Servobandeinzug
+   Pozice: 2065031
+
+[ (FB)] ST_Start_Batchscript
+   Cesta: ST_Start_Batchscript
+   Pozice: 2133389
+
+[ (PRG)] ST_start_OSK
+   Cesta: ST_start_OSK
+   Pozice: 2136349
+
+[ (FB)] ST_StateEntry
+   Cesta: ST_StateEntry
+   Pozice: 2137102
+
+[ (PRG)] ST_Stoerungen_Quitt_1700
+   Cesta: ST_Stoerungen_Quitt_1700
+   Pozice: 2142017
+
+[ (PRG)] ST_Stoerungen_Quitt_1720
+   Cesta: ST_Stoerungen_Quitt_1720
+   Pozice: 2169928
+
+[ (FB)] ST_Stueckzahl
+   Cesta: ST_Stueckzahl
+   Pozice: 2190947
+
+[ (FB)] ST_SucheRemotePC
+   Cesta: ST_SucheRemotePC
+   Pozice: 2200061
+
+[ (PRG)] ST_System_DateAndTime
+   Cesta: ST_System_DateAndTime
+   Pozice: 2203659
+
+[ (FB)] ST_Taktzeit
+   Cesta: ST_Taktzeit
+   Pozice: 2206143
+
+[ (PRG)] ST_TippTasten
+   Cesta: ST_TippTasten
+   Pozice: 2206898
+
+[ (PRG)] ST_TouchProbe
+   Cesta: ST_TouchProbe
+   Pozice: 2210516
+
+[ (PRG)] ST_Tuerverriegelung
+   Cesta: ST_Tuerverriegelung
+   Pozice: 2230710
+
+[ (PRG)] ST_UPS
+   Cesta: ST_UPS
+   Pozice: 2232430
+
+[ (PRG)] ST_Virtuelle_Masterachse
+   Cesta: ST_Virtuelle_Masterachse
+   Pozice: 2241529
+
+[ (PRG)] ST_VisuRouter
+   Cesta: ST_VisuRouter
+   Pozice: 2383648
+
+[ (PRG)] ST_Wartung
+   Cesta: ST_Wartung
+   Pozice: 2411034
+
+[ (FB)] ST_Winkeltrigger
+   Cesta: ST_Winkeltrigger
+   Pozice: 2438387
+
+[ (PRG)] ST_WkzAbsicherung
+   Cesta: ST_WkzAbsicherung
+   Pozice: 2440471
+
+[ (PRG)] ST_WT_Transport_Abgabe
+   Cesta: ST_WT_Transport_Abgabe
+   Pozice: 2454953
+
+[ (PRG)] ST_WT_Transport_Achse
+   Cesta: ST_WT_Transport_Achse
+   Pozice: 2471129
+
+[ (PRG)] ST_WT_Transport_Beladen
+   Cesta: ST_WT_Transport_Beladen
+   Pozice: 2513069
+
+[ (PRG)] ST_WT_Transport_Beladen_1720
+   Cesta: ST_WT_Transport_Beladen_1720
+   Pozice: 2540923
+
+[ (PRG)] ST_WT_Transport_Beladen_Achse_1700
+   Cesta: ST_WT_Transport_Beladen_Achse_1700
+   Pozice: 2565878
+
+[ (PRG)] ST_WT_Transport_Kontroller
+   Cesta: ST_WT_Transport_Kontroller
+   Pozice: 2598450
+
+[ (PRG)] ST_WT_Transport_Warteposition_1700
+   Cesta: ST_WT_Transport_Warteposition_1700
+   Pozice: 2633554
+
+[ (PRG)] ST_WT_Transport_Warteposition_1720
+   Cesta: ST_WT_Transport_Warteposition_1720
+   Pozice: 2651339
+
+[ (PRG)] ST_Y_Achse
+   Cesta: ST_Y_Achse
+   Pozice: 2667128
+
+[ (PRG)] ST_Z_Achse
+   Cesta: ST_Z_Achse
+   Pozice: 2720571
+
+[ (PRG)] ST_Zylinder
+   Cesta: ST_Zylinder
+   Pozice: 2817533
+
+[ (FB)] ST_Zylinder12V012346E
+   Cesta: ST_Zylinder12V012346E
+   Pozice: 2852583
+
+[ (PRG)] ST_Zylinder_Fast
+   Cesta: ST_Zylinder_Fast
+   Pozice: 2922971
+
+[ (PRG)] WORD_TO_BOOLARRAY
+   Cesta: WORD_TO_BOOLARRAY
+   Pozice: 2932180
+
+[ (PRG)] WORD_TO_STR_LEN
+   Cesta: WORD_TO_STR_LEN
+   Pozice: 2932779
+
+[ (FB)] WriteAdsStruct
+   Cesta: WriteAdsStruct
+   Pozice: 2933444
+

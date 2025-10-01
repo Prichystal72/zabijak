@@ -1,0 +1,117 @@
+=== AKTUÁLNÍ STAV LISTBOX (SPRÁVNÁ METODA) ===
+ListBox Handle: 0x000603f2
+TwinCAT Window: 0x001c004c
+
+Celkem položek v ListBox: 22
+
+  1. POUs
+     ItemData: 0x0b0f6cb8
+     Úroveň: 0
+     Rodič: 0
+
+  2. EPT Lib
+     ItemData: 0x0b0f6d50
+     Úroveň: 0
+     Rodič: 0
+
+  3. Achsen
+     ItemData: 0x0b0f6fb0
+     Úroveň: 0
+     Rodič: 0
+
+  4. BECKHOFF
+     ItemData: 0x0b0f7178
+     Úroveň: 0
+     Rodič: 0
+
+  5. 
+     ItemData: 0x0b0f7340
+     Úroveň: 2
+     Rodič: 0
+
+  6. 
+     ItemData: 0x0b0f66c8
+     Úroveň: 2
+     Rodič: 0
+
+  7. sub_TouchProbe
+     ItemData: 0x0a9302e8
+     Úroveň: 2
+     Rodič: 0
+
+  8. CamEditor
+     ItemData: 0x0b0f6468
+     Úroveň: 0
+     Rodič: 0
+
+  9. Daten
+     ItemData: 0x0b0f8348
+     Úroveň: 0
+     Rodič: 0
+
+ 10. Ethercat Diagnose
+     ItemData: 0x0b0f7f20
+     Úroveň: 0
+     Rodič: 0
+
+ 11. Funktionen
+     ItemData: 0x0b0f7fb8
+     Úroveň: 0
+     Rodič: 0
+
+ 12. Funktionsbausteine
+     ItemData: 0x0b0f9a70
+     Úroveň: 0
+     Rodič: 0
+
+ 13. Programmbausteine
+     ItemData: 0x0b0f93e8
+     Úroveň: 0
+     Rodič: 0
+
+ 14. 
+     ItemData: 0x0b0fa948
+     Úroveň: 0
+     Rodič: 0
+
+ 15. ST_BalluffTagReader
+     ItemData: 0x0b0fab10
+     Úroveň: 0
+     Rodič: 0
+
+ 16. ST_BarcodeReader
+     ItemData: 0x0b0fa060
+     Úroveň: 0
+     Rodič: 0
+
+ 17. Zylinder
+     ItemData: 0x0b0fa488
+     Úroveň: 0
+     Rodič: 0
+
+ 18. Gemeinsamkeiten17xx
+     ItemData: 0x0b0fa358
+     Úroveň: 0
+     Rodič: 0
+
+ 19. MAINs
+     ItemData: 0x0b0fea00
+     Úroveň: 0
+     Rodič: 0
+
+ 20. Maschine1700
+     ItemData: 0x0b0ff970
+     Úroveň: 0
+     Rodič: 0
+
+ 21. Maschine1720
+     ItemData: 0x0b0ff120
+     Úroveň: 0
+     Rodič: 0
+
+ 22. Rasterfolie
+     ItemData: 0x0b0ff5e0
+     Úroveň: 0
+     Rodič: 0
+
+Úspěšně načteno položek: 22 / 22

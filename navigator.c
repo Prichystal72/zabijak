@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <psapi.h>
+#include "lib/twincat_navigator.h"
+#include "twincat_project_parser.h"
+#include "twincat_path_finder.h"
 
 #define MAX_PATH_LEN 512
 #define MAX_LINE_LEN 2048
@@ -18,15 +21,32 @@ typedef struct {
 POUItem pous[MAX_POUS];
 int pou_count = 0;
 
-// Hledani cesty k souboru v pameti procesu
+// Hledani cesty k souboru v pameti procesu - RYCHLA VERZE
 BOOL FindFilePathInMemory(HANDLE hProcess, const char* filename, char* full_path) {
     MEMORY_BASIC_INFORMATION mbi;
     char* addr = 0;
-    char buffer[4096];
+    char buffer[4096]; // Mensi buffer pro rychlost
+    int regions_scanned = 0;
+    const int MAX_REGIONS = 1000; // Zvětšeno pro větší pokrytí
     
-    printf("Hledam cestu k souboru '%s' v pameti procesu...\n", filename);
+    printf("Hledam cestu k souboru '%s' v pameti procesu (rychla verze, max %d oblasti)...\n", filename, MAX_REGIONS);
     
-    while (VirtualQueryEx(hProcess, addr, &mbi, sizeof(mbi))) {
+    // Pripravime ruzne varianty nazvu souboru
+    char filename_no_ext[256];
+    strcpy(filename_no_ext, filename);
+    char* dot = strrchr(filename_no_ext, '.');
+    if (dot) *dot = '\0'; // Odstranime priponu
+    
+    int found_paths = 0;
+    
+    while (VirtualQueryEx(hProcess, addr, &mbi, sizeof(mbi)) && regions_scanned < MAX_REGIONS) {
+        regions_scanned++;
+        
+        // Debug: ukáž pokrok každých 100 oblastí
+        if (regions_scanned % 100 == 0) {
+            printf("    -> Oblast %d: adresa 0x%p\n", regions_scanned, mbi.BaseAddress);
+        }
+        
         if (mbi.State == MEM_COMMIT && 
             (mbi.Protect & PAGE_READWRITE || mbi.Protect & PAGE_READONLY)) {
             
@@ -34,44 +54,107 @@ BOOL FindFilePathInMemory(HANDLE hProcess, const char* filename, char* full_path
             if (ReadProcessMemory(hProcess, mbi.BaseAddress, buffer, 
                                  min(sizeof(buffer), mbi.RegionSize), &bytesRead)) {
                 
-                // Hledame retezce obsahujici nazev souboru
-                for (SIZE_T i = 0; i < bytesRead - strlen(filename); i++) {
-                    if (strncmp(&buffer[i], filename, strlen(filename)) == 0) {
-                        // Nasli jsme nazev souboru, najdeme zacatek cesty
-                        SIZE_T start = i;
-                        while (start > 0 && buffer[start-1] != '\0' && 
-                               (buffer[start-1] == '\\' || buffer[start-1] == '/' || 
-                                isalnum(buffer[start-1]) || buffer[start-1] == ':' || 
-                                buffer[start-1] == '.' || buffer[start-1] == '_')) {
-                            start--;
+                // METODA 1: Hledame ASCII stringy obsahujici nazev souboru
+                for (SIZE_T i = 0; i < bytesRead - 10; i++) {
+                    // Kontrola ASCII textu (printable znaky)
+                    if (buffer[i] >= 32 && buffer[i] <= 126) {
+                        // Najdeme delku ASCII stringu
+                        SIZE_T str_len = 0;
+                        while (i + str_len < bytesRead && 
+                               buffer[i + str_len] >= 32 && buffer[i + str_len] <= 126 &&
+                               str_len < 500) {
+                            str_len++;
                         }
                         
-                        // Najdeme konec cesty
-                        SIZE_T end = i + strlen(filename);
-                        while (end < bytesRead && buffer[end] != '\0' && buffer[end] != '\n' && buffer[end] != '\r') {
-                            end++;
-                        }
-                        
-                        // Zkopirujeme cestu
-                        SIZE_T path_len = end - start;
-                        if (path_len > 0 && path_len < MAX_PATH_LEN) {
-                            strncpy(full_path, &buffer[start], path_len);
-                            full_path[path_len] = '\0';
+                        if (str_len > 10) { // Zajimave jen delsi stringy
+                            char ascii_string[501];
+                            strncpy(ascii_string, &buffer[i], str_len);
+                            ascii_string[str_len] = '\0';
                             
-                            // Overime ze to vypada jako validni cesta
-                            if ((full_path[1] == ':' || full_path[0] == '\\') && 
-                                (strstr(full_path, ".pro") || strstr(full_path, ".tsproj"))) {
-                                printf("    -> Nalezena cesta: '%s'\n", full_path);
+                            // Debug: ukáž .pro stringy s cestou
+                            if (strstr(ascii_string, ".pro") && 
+                                (strstr(ascii_string, ":\\") || strstr(ascii_string, "/"))) {
+                                printf("    -> Debug cesta .pro: '%s'\n", ascii_string);
+                                found_paths++;
+                            }
+                            
+                            // Kontrola zda obsahuje nas soubor nebo jeho cast
+                            if (strstr(ascii_string, filename) || 
+                                strstr(ascii_string, filename_no_ext) ||
+                                (strstr(ascii_string, ".pro") && 
+                                 (strstr(ascii_string, ":\\") || strstr(ascii_string, "/")))) {
+                                
+                                printf("    -> ASCII kandidat %d: '%s'\n", ++found_paths, ascii_string);
+                                
+                                // Pokusime se vyextrahovat cistou cestu
+                                char clean_path[MAX_PATH_LEN];
+                                char* path_start = strstr(ascii_string, ":\\");
+                                if (path_start) {
+                                    // Jdeme zpet a najdeme drive letter
+                                    while (path_start > ascii_string && *(path_start-1) >= 'A' && *(path_start-1) <= 'Z') {
+                                        path_start--;
+                                    }
+                                    strcpy(clean_path, path_start);
+                                } else {
+                                    strcpy(clean_path, ascii_string);
+                                }
                                 
                                 // Test existence
-                                FILE* test = fopen(full_path, "r");
+                                FILE* test = fopen(clean_path, "r");
                                 if (test) {
                                     fclose(test);
-                                    printf("    -> Cesta overena!\n");
+                                    printf("    -> *** PLATNA ASCII CESTA: '%s' ***\n", clean_path);
+                                    strcpy(full_path, clean_path);
                                     return TRUE;
+                                } else if (strcmp(clean_path, ascii_string) != 0) {
+                                    // Zkusime i puvodni cestu
+                                    test = fopen(ascii_string, "r");
+                                    if (test) {
+                                        fclose(test);
+                                        printf("    -> *** PLATNA ASCII CESTA: '%s' ***\n", ascii_string);
+                                        strcpy(full_path, ascii_string);
+                                        return TRUE;
+                                    }
                                 }
                             }
                         }
+                        i += str_len; // Preskocime zpracovany string
+                    }
+                }
+                
+                // METODA 2: Hledame Unicode stringy (kazdy druhy byte = 0)
+                for (SIZE_T i = 0; i < bytesRead - 20; i += 2) {
+                    if (buffer[i] >= 32 && buffer[i] <= 126 && buffer[i+1] == 0) {
+                        // Mozny Unicode string
+                        char unicode_string[501];
+                        SIZE_T unicode_len = 0;
+                        
+                        while (i + unicode_len * 2 + 1 < bytesRead && 
+                               buffer[i + unicode_len * 2] >= 32 && 
+                               buffer[i + unicode_len * 2] <= 126 &&
+                               buffer[i + unicode_len * 2 + 1] == 0 &&
+                               unicode_len < 250) {
+                            unicode_string[unicode_len] = buffer[i + unicode_len * 2];
+                            unicode_len++;
+                        }
+                        unicode_string[unicode_len] = '\0';
+                        
+                        if (unicode_len > 10 && 
+                            (strstr(unicode_string, filename) || 
+                             strstr(unicode_string, filename_no_ext) ||
+                             (strstr(unicode_string, ".pro") && strstr(unicode_string, ":\\")))) {
+                            
+                            printf("    -> Unicode kandidat %d: '%s'\n", ++found_paths, unicode_string);
+                            
+                            FILE* test = fopen(unicode_string, "r");
+                            if (test) {
+                                fclose(test);
+                                printf("    -> *** PLATNA UNICODE CESTA: '%s' ***\n", unicode_string);
+                                strcpy(full_path, unicode_string);
+                                return TRUE;
+                            }
+                        }
+                        i += unicode_len * 2; // Preskocime Unicode string
                     }
                 }
             }
@@ -80,6 +163,7 @@ BOOL FindFilePathInMemory(HANDLE hProcess, const char* filename, char* full_path
         addr = (char*)mbi.BaseAddress + mbi.RegionSize;
     }
     
+    printf("    -> Celkem nalezeno %d kandidatu, zadny neni platny\n", found_paths);
     return FALSE;
 }
 
@@ -256,150 +340,86 @@ BOOL IsEndOfPOUsSection(const char* line, int current_level) {
     return FALSE;
 }
 
-// Analyza binarniho souboru .pro pro POUs strukturu
+// Analyza binarniho souboru .pro pro POUs strukturu pomocí vyladěného parseru
 BOOL AnalyzePOUsStructure(const char* filepath) {
-    FILE* file = fopen(filepath, "rb"); // Binary mode
-    if (!file) {
-        printf("Nelze otevrit soubor: %s\n", filepath);
+    printf("🔍 Používám vyladěný TwinCAT parser...\n");
+    
+    // Vytvoř parser
+    TCProjectParser* parser = tc_parser_create();
+    if (!parser) {
+        printf("❌ Nelze vytvořit parser\n");
         return FALSE;
     }
     
-    // Ziskame velikost souboru
-    fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    
-    printf("Analyzuji binarni soubor .pro (velikost: %ld bytes)...\n", file_size);
-    
-    // Nacteme soubor po chunkach
-    char buffer[8192];
-    size_t total_read = 0;
-    BOOL found_pous = FALSE;
-    
-    // Vzory pro hledani
-    char* search_patterns[] = {
-        "POUs",
-        "ST02_PRGs", 
-        "FB_Schwenken",
-        "ST02_CallFBs", 
-        "PushData",
-        "PROGRAM",
-        "FUNCTION_BLOCK",
-        "FUNCTION",
-        NULL
-    };
-    
-    while (!feof(file) && total_read < file_size) {
-        size_t bytes_read = fread(buffer, 1, sizeof(buffer), file);
-        if (bytes_read == 0) break;
-        
-        total_read += bytes_read;
-        
-        // Hledame textove retezce v binarnim obsahu
-        for (size_t i = 0; i < bytes_read - 50; i++) {
-            // Kontrola zda zacina ASCII text
-            if (isalpha(buffer[i]) || buffer[i] == '_') {
-                // Extrahujeme textovy retezec
-                char extracted_text[256];
-                size_t text_len = 0;
-                
-                // Cteme text dokud jsou validni znaky
-                while (i + text_len < bytes_read && text_len < 255 &&
-                       (isalnum(buffer[i + text_len]) || 
-                        buffer[i + text_len] == '_' ||
-                        buffer[i + text_len] == '-' ||
-                        buffer[i + text_len] == '.' ||
-                        buffer[i + text_len] == ' ')) {
-                    extracted_text[text_len] = buffer[i + text_len];
-                    text_len++;
-                }
-                extracted_text[text_len] = '\0';
-                
-                // Filtrujeme zajimave texty
-                if (text_len > 3) {
-                    for (int pattern_idx = 0; search_patterns[pattern_idx] != NULL; pattern_idx++) {
-                        if (strstr(extracted_text, search_patterns[pattern_idx])) {
-                            printf("    -> Nalezen text: '%s' na pozici %zu\n", extracted_text, total_read - bytes_read + i);
-                            
-                            // Zpracujeme nalezeny text
-                            char clean_name[256];
-                            strcpy(clean_name, extracted_text);
-                            
-                            // Ocistime nazev
-                            char* space = strchr(clean_name, ' ');
-                            if (space) *space = '\0';
-                            
-                            // Kontrola duplikatu
-                            BOOL exists = FALSE;
-                            for (int k = 0; k < pou_count; k++) {
-                                if (strcmp(pous[k].name, clean_name) == 0) {
-                                    exists = TRUE;
-                                    break;
-                                }
-                            }
-                            
-                            if (!exists && pou_count < MAX_POUS && strlen(clean_name) > 3) {
-                                strcpy(pous[pou_count].name, clean_name);
-                                
-                                // Urceni typu podle nazvu
-                                if (strstr(clean_name, "FB_")) {
-                                    strcpy(pous[pou_count].type, "FB");
-                                } else if (strstr(clean_name, "CallFB") || strstr(clean_name, "_PRG")) {
-                                    strcpy(pous[pou_count].type, "PRG");
-                                } else if (strstr(clean_name, "Push") && strstr(clean_name, "Data")) {
-                                    strcpy(pous[pou_count].type, "FUN");
-                                } else if (strstr(clean_name, "POUs")) {
-                                    strcpy(pous[pou_count].type, "folder");
-                                    found_pous = TRUE;
-                                } else if (strstr(clean_name, "ST02") && strstr(clean_name, "PRG")) {
-                                    strcpy(pous[pou_count].type, "folder");
-                                } else {
-                                    strcpy(pous[pou_count].type, "item");
-                                }
-                                
-                                // Jednoducha hierarchie
-                                if (strstr(clean_name, "POUs")) {
-                                    strcpy(pous[pou_count].parent, "");
-                                    pous[pou_count].level = 0;
-                                } else if (strstr(clean_name, "ST02_PRG")) {
-                                    strcpy(pous[pou_count].parent, "POUs");
-                                    pous[pou_count].level = 1;
-                                } else {
-                                    strcpy(pous[pou_count].parent, "ST02_PRGs");
-                                    pous[pou_count].level = 2;
-                                }
-                                
-                                printf("      -> Pridan: [%d] %s (%s) - parent: %s\n", 
-                                       pous[pou_count].level, clean_name, 
-                                       pous[pou_count].type, pous[pou_count].parent);
-                                       
-                                pou_count++;
-                            }
-                            break;
-                        }
-                    }
-                }
-                
-                i += text_len; // Preskocime zpracovany text
-            }
-        }
-        
-        // Progress indikator
-        if (total_read % 100000 == 0) {
-            printf("    Zpracovano: %zu/%ld bytes (%.1f%%)\n", 
-                   total_read, file_size, (float)total_read * 100 / file_size);
-        }
-    }
-    
-    fclose(file);
-    
-    if (!found_pous && pou_count == 0) {
-        printf("VAROVANI: POUs struktura nebyla nalezena v souboru!\n");
+    // Načti projekt
+    if (!tc_parser_load_project(parser, filepath)) {
+        printf("❌ Nelze načíst projekt: %s\n", filepath);
+        tc_parser_destroy(parser);
         return FALSE;
     }
     
-    printf("Analyzovano %d POUs polozek z binarniho souboru\n", pou_count);
-    return TRUE;
+    // Parsuj strukturu
+    if (!tc_parser_parse(parser)) {
+        printf("❌ Chyba při parsování projektu\n");
+        tc_parser_destroy(parser);
+        return FALSE;
+    }
+    
+    // Převeď data z parseru do našeho formátu
+    int element_count = tc_get_element_count(parser);
+    pou_count = 0;
+    
+    printf("✅ Parser našel %d elementů, převádím do interního formátu...\n", element_count);
+    
+    for (int i = 0; i < element_count && pou_count < MAX_POUS; i++) {
+        TCElement* elem = &parser->element_list.elements[i];
+        if (!elem) continue;
+        
+        // Zkopíruj základní data
+        strncpy(pous[pou_count].name, elem->name, sizeof(pous[pou_count].name) - 1);
+        pous[pou_count].name[sizeof(pous[pou_count].name) - 1] = '\0';
+        
+        // Převeď typ
+        switch (elem->type) {
+            case TC_ELEMENT_FB:
+                strcpy(pous[pou_count].type, "FB");
+                break;
+            case TC_ELEMENT_PRG:
+                strcpy(pous[pou_count].type, "PRG");
+                break;
+            case TC_ELEMENT_FOLDER:
+                strcpy(pous[pou_count].type, "folder");
+                break;
+            case TC_ELEMENT_ACTION:
+                strcpy(pous[pou_count].type, "action");
+                break;
+            case TC_ELEMENT_STRUCT:
+                strcpy(pous[pou_count].type, "struct");
+                break;
+            case TC_ELEMENT_ENUM:
+                strcpy(pous[pou_count].type, "enum");
+                break;
+            default:
+                strcpy(pous[pou_count].type, "item");
+                break;
+        }
+        
+        // Základní hierarchie (zjednodušeně)
+        if (elem->is_folder) {
+            strcpy(pous[pou_count].parent, "");
+            pous[pou_count].level = 0;
+        } else {
+            strcpy(pous[pou_count].parent, "POUs");
+            pous[pou_count].level = 1;
+        }
+        
+        printf("    → Převeden: %s (%s)\n", pous[pou_count].name, pous[pou_count].type);
+        pou_count++;
+    }
+    
+    // Vyčisti parser
+    tc_parser_destroy(parser);
+    
 }
 
 // Zápis do XML souboru
@@ -430,41 +450,421 @@ BOOL WriteToXML(const char* output_file) {
     return TRUE;
 }
 
+// ===============================================
+// NOVE FUNKCE PRO CHYTRY NAVIGATION
+// ===============================================
+
+// Struktura pro projekt hierarchii
+typedef struct ProjectItem {
+    char name[256];
+    char type[64];
+    char full_path[512];
+    int level;
+    struct ProjectItem* parent;
+    struct ProjectItem* children[50];
+    int child_count;
+} ProjectItem;
+
+ProjectItem* project_root = NULL;
+ProjectItem all_items[1000];
+int total_items = 0;
+
+// Nacteni cele struktury projektu z POUs dat
+BOOL LoadProjectStructure() {
+    printf("📁 Načítám celou strukturu projektu...\n");
+    
+    if (pou_count == 0) {
+        printf("❌ Nejsou dostupná POUs data\n");
+        return FALSE;
+    }
+    
+    // Vytvorime root
+    project_root = &all_items[0];
+    strcpy(project_root->name, "POUs");
+    strcpy(project_root->type, "folder");
+    strcpy(project_root->full_path, "POUs");
+    project_root->level = 0;
+    project_root->parent = NULL;
+    project_root->child_count = 0;
+    total_items = 1;
+    
+    // Prevedeme pous[] array na hierarchicky strom
+    for (int i = 0; i < pou_count; i++) {
+        if (strcmp(pous[i].name, "POUs") == 0) continue; // Preskocime root
+        
+        ProjectItem* item = &all_items[total_items];
+        strcpy(item->name, pous[i].name);
+        strcpy(item->type, pous[i].type);
+        item->level = pous[i].level;
+        item->child_count = 0;
+        
+        // Najdeme parent
+        item->parent = NULL;
+        for (int j = 0; j < total_items; j++) {
+            if (strcmp(all_items[j].name, pous[i].parent) == 0) {
+                item->parent = &all_items[j];
+                // Pridame do parent children
+                if (all_items[j].child_count < 50) {
+                    all_items[j].children[all_items[j].child_count] = item;
+                    all_items[j].child_count++;
+                }
+                break;
+            }
+        }
+        
+        // Vytvorime full_path
+        if (item->parent) {
+            sprintf(item->full_path, "%s → %s", item->parent->full_path, item->name);
+        } else {
+            strcpy(item->full_path, item->name);
+        }
+        
+        total_items++;
+    }
+    
+    printf("✅ Načteno %d položek projektu\n", total_items);
+    return TRUE;
+}
+
+// Najdi cilovou polozku podle nazvu z titulku okna
+ProjectItem* FindTargetItem(const char* window_title) {
+    printf("🎯 Hledám cílovou položku z titulku: '%s'\n", window_title);
+    
+    // Extrahuj nazev z titulku (napr. "[ST02_CallFBs (PRG-ST)]" → "ST02_CallFBs")
+    char target_name[256] = "";
+    char* bracket_start = strchr(window_title, '[');
+    char* bracket_end = strchr(window_title, ']');
+    
+    if (bracket_start && bracket_end) {
+        bracket_start++; // Preskocime [
+        char* space_or_paren = strpbrk(bracket_start, " (");
+        if (space_or_paren && space_or_paren < bracket_end) {
+            int len = space_or_paren - bracket_start;
+            strncpy(target_name, bracket_start, len);
+            target_name[len] = '\0';
+        }
+    }
+    
+    if (strlen(target_name) == 0) {
+        printf("❌ Nelze extrahovat název z titulku\n");
+        return NULL;
+    }
+    
+    printf("   → Hledám: '%s'\n", target_name);
+    
+    // Najdeme polozku ve structure
+    for (int i = 0; i < total_items; i++) {
+        if (strcmp(all_items[i].name, target_name) == 0) {
+            printf("✅ Nalezeno: %s (cesta: %s)\n", all_items[i].name, all_items[i].full_path);
+            return &all_items[i];
+        }
+    }
+    
+    printf("❌ Položka '%s' nenalezena ve struktuře projektu\n", target_name);
+    return NULL;
+}
+
+// Vypis cesty k cilovemu objektu
+void PrintNavigationPath(ProjectItem* target) {
+    if (!target) return;
+    
+    printf("🚀 Cesta k objektu: %s\n", target->full_path);
+    
+    // Sestavime cestu od root k target
+    ProjectItem* path[20];
+    int path_length = 0;
+    
+    ProjectItem* current = target;
+    while (current && path_length < 20) {
+        path[path_length] = current;
+        path_length++;
+        current = current->parent;
+    }
+    
+    // Obratme cestu (od root k target)
+    printf("📍 Kroky k otevření:\n");
+    for (int i = path_length - 1; i >= 0; i--) {
+        printf("   %d. %s (%s)\n", path_length - i, path[i]->name, path[i]->type);
+    }
+}
+
+// ===============================================
+// FUNKCE PRO PRACI S DVA SEZNAMY SOUČASNĚ
+// ===============================================
+
+// Nacteni aktualniho stavu TreeView z RAM pameti
+TreeItem current_tree[MAX_ITEMS];
+int current_tree_count = 0;
+
+BOOL LoadCurrentTreeFromRAM(HWND hTwinCAT) {
+    printf("📚 Načítám aktuální stav TreeView z RAM paměti...\n");
+    
+    // Najdeme TreeView/ListBox
+    HWND hListBox = FindProjectListBox(hTwinCAT);
+    if (!hListBox) {
+        printf("❌ TreeView/ListBox nenalezen\n");
+        return FALSE;
+    }
+    
+    // Otevreme proces pro cteni pameti
+    HANDLE hProcess = OpenTwinCatProcess(hListBox);
+    if (!hProcess) {
+        printf("❌ Nelze otevřít TwinCAT proces\n");
+        return FALSE;
+    }
+    
+    // Ziskame pocet polozek
+    current_tree_count = GetListBoxItemCount(hListBox);
+    if (current_tree_count > MAX_ITEMS) current_tree_count = MAX_ITEMS;
+    
+    printf("   → Nalezeno %d položek v TreeView\n", current_tree_count);
+    
+    // Extrahujeme vsechny polozky
+    int extracted = 0;
+    for (int i = 0; i < current_tree_count; i++) {
+        if (ExtractTreeItem(hProcess, hListBox, i, &current_tree[i])) {
+            extracted++;
+        }
+    }
+    
+    CloseHandle(hProcess);
+    
+    printf("✅ Extrahováno %d/%d položek z TreeView\n", extracted, current_tree_count);
+    return TRUE;
+}
+
+// ===============================================
+// CHYTRÁ NAVIGAČNÍ FUNKCE
+// ===============================================
+
+// Chytra navigace k cilovemu objektu - klikne jen na potrebne slozky
+BOOL SmartNavigateToTarget(ProjectItem* target, HWND hTwinCAT) {
+    if (!target) {
+        printf("❌ Žádný cílový objekt\n");
+        return FALSE;
+    }
+    
+    printf("\n🎯 === CHYTRÁ NAVIGACE === 🎯\n");
+    printf("Cíl: %s\n", target->name);
+    printf("Plná cesta: %s\n", target->full_path);
+    
+    // Najdeme TreeView/ListBox
+    HWND hListBox = FindProjectListBox(hTwinCAT);
+    if (!hListBox) {
+        printf("❌ TreeView nenalezen\n");
+        return FALSE;
+    }
+    
+    // Otevreme proces
+    HANDLE hProcess = OpenTwinCatProcess(hListBox);
+    if (!hProcess) {
+        printf("❌ Nelze otevřít proces\n");
+        return FALSE;
+    }
+    
+    // Rozdelime plnou cestu na kroky
+    char path_copy[512];
+    strcpy(path_copy, target->full_path);
+    
+    char* steps[10];
+    int step_count = 0;
+    
+    char* token = strtok(path_copy, " → ");
+    while (token && step_count < 10) {
+        steps[step_count] = token;
+        step_count++;
+        token = strtok(NULL, " → ");
+    }
+    
+    printf("📍 Kroky navigace (%d):\n", step_count);
+    for (int i = 0; i < step_count; i++) {
+        printf("   %d. %s\n", i + 1, steps[i]);
+    }
+    
+    // Projdeme jednotlive kroky a rozbalneme potrebne slozky
+    for (int step = 0; step < step_count - 1; step++) { // -1 protoze posledni je cil, ne slozka
+        char* folder_name = steps[step];
+        printf("\n🔍 Krok %d: Hledám složku '%s'\n", step + 1, folder_name);
+        
+        // Aktualizuj stav TreeView
+        int current_count = GetListBoxItemCount(hListBox);
+        printf("   → Aktuální počet položek: %d\n", current_count);
+        
+        // Najdi slozku v aktualnim stavu
+        int folder_index = -1;
+        for (int i = 0; i < current_count && i < MAX_ITEMS; i++) {
+            TreeItem item;
+            if (ExtractTreeItem(hProcess, hListBox, i, &item)) {
+                // Kontrola shody nazvu (presne nebo obsahuje)
+                if (strcmp(item.text, folder_name) == 0 || strstr(item.text, folder_name)) {
+                    folder_index = i;
+                    printf("   ✅ Složka nalezena na pozici %d: '%s'\n", i, item.text);
+                    break;
+                }
+            }
+        }
+        
+        if (folder_index == -1) {
+            printf("   ❌ Složka '%s' není viditelná - možná je nadřazená složka nerozbalená\n", folder_name);
+            CloseHandle(hProcess);
+            return FALSE;
+        }
+        
+        // Zkontroluj zda je slozka rozbalna (typ folder/special)
+        TreeItem folder_item;
+        if (!ExtractTreeItem(hProcess, hListBox, folder_index, &folder_item)) {
+            printf("   ❌ Nelze načíst detaily složky\n");
+            continue;
+        }
+        
+        printf("   → Typ složky: %s, Flags: 0x%X\n", folder_item.type, folder_item.flags);
+        
+        // Pokud je to slozka, zkus ji rozbalit
+        if (folder_item.flags == FLAG_FOLDER || folder_item.flags == FLAG_SPECIAL) {
+            printf("   🔓 Rozbaluji složku '%s'...\n", folder_name);
+            
+            // Fokusuj na slozku
+            if (!FocusOnItem(hListBox, folder_index)) {
+                printf("   ❌ Nelze fokusovat na složku\n");
+                continue;
+            }
+            
+            // Aktivuj okno
+            SetForegroundWindow(GetParent(hListBox));
+            Sleep(100);
+            
+            // Kontrola pred rozbalenim
+            int items_before = GetListBoxItemCount(hListBox);
+            
+            // Dvojklik pro rozbaleni
+            SendMessage(hListBox, WM_LBUTTONDBLCLK, 0, MAKELPARAM(10, 10));
+            Sleep(200); // Pockej na rozbaleni
+            
+            // Kontrola po rozbaleni
+            int items_after = GetListBoxItemCount(hListBox);
+            
+            if (items_after > items_before) {
+                printf("   ✅ Rozbaleno! (%d → %d položek)\n", items_before, items_after);
+            } else {
+                printf("   ⚠️ Možná už byla rozbalená nebo nemá podpoložky\n");
+            }
+        } else {
+            printf("   → Není to rozbalitelná složka, pokračuji\n");
+        }
+    }
+    
+    // Finalni krok - najdi a fokusuj cilovy objekt
+    printf("\n🎯 Finální krok: Hledám cílový objekt '%s'\n", target->name);
+    
+    int final_count = GetListBoxItemCount(hListBox);
+    printf("   → Finální počet položek: %d\n", final_count);
+    
+    for (int i = 0; i < final_count && i < MAX_ITEMS; i++) {
+        TreeItem item;
+        if (ExtractTreeItem(hProcess, hListBox, i, &item)) {
+            if (strstr(item.text, target->name)) {
+                printf("   ✅ Cílový objekt nalezen na pozici %d: '%s'\n", i, item.text);
+                
+                // Fokusuj na cilovy objekt
+                if (FocusOnItem(hListBox, i)) {
+                    printf("   🎯 ÚSPĚCH: Fokusováno na cílový objekt!\n");
+                    CloseHandle(hProcess);
+                    return TRUE;
+                } else {
+                    printf("   ❌ Nelze fokusovat na cílový objekt\n");
+                }
+                break;
+            }
+        }
+    }
+    
+    printf("   ❌ Cílový objekt nebyl nalezen ani po navigaci\n");
+    CloseHandle(hProcess);
+    return FALSE;
+}
+
+// Porovnani kompletniho seznamu ze souboru s aktualnim stavem z RAM
+void CompareFileVsRAM(const char* target_name, HWND hTwinCAT) {
+    printf("\n🔍 === POROVNÁNÍ SOUBOR vs RAM === 🔍\n");
+    
+    // Najdeme cilovy objekt v kompletnim seznamu (ze souboru)
+    ProjectItem* file_target = NULL;
+    for (int i = 0; i < total_items; i++) {
+        if (strcmp(all_items[i].name, target_name) == 0) {
+            file_target = &all_items[i];
+            break;
+        }
+    }
+    
+    if (file_target) {
+        printf("📁 SOUBOR: Objekt '%s' nalezen - cesta: %s\n", target_name, file_target->full_path);
+    } else {
+        printf("❌ SOUBOR: Objekt '%s' NENALEZEN v kompletní struktuře\n", target_name);
+    }
+    
+    // Najdeme cilovy objekt v aktualnim TreeView (z RAM)
+    TreeItem* ram_target = NULL;
+    for (int i = 0; i < current_tree_count; i++) {
+        if (strstr(current_tree[i].text, target_name)) {
+            ram_target = &current_tree[i];
+            break;
+        }
+    }
+    
+    if (ram_target) {
+        printf("💾 RAM: Objekt '%s' VIDITELNÝ v TreeView na pozici %d\n", target_name, ram_target->index);
+        printf("   → Text: '%s'\n", ram_target->text);
+        printf("   → Typ: %s, Úroveň: %d\n", ram_target->type, ram_target->level);
+    } else {
+        printf("❌ RAM: Objekt '%s' NENÍ VIDITELNÝ v aktuálním TreeView\n", target_name);
+        printf("   → Potřeba rozbalit složky pro zobrazení\n");
+    }
+    
+    // Analyza co je potreba udelat
+    if (file_target && !ram_target) {
+        printf("\n🎯 AKCE: Objekt existuje, ale není viditelný - spouštím chytrou navigaci!\n");
+        PrintNavigationPath(file_target);
+        
+        // Spustime chytrou navigaci
+        printf("\n🚀 Spouštím chytrou navigaci...\n");
+        if (SmartNavigateToTarget(file_target, hTwinCAT)) {
+            printf("🎉 NAVIGACE ÚSPĚŠNÁ!\n");
+        } else {
+            printf("❌ Navigace selhala\n");
+        }
+    } else if (file_target && ram_target) {
+        printf("\n✅ ÚSPĚCH: Objekt je dostupný a viditelný\n");
+        printf("💡 Můžeme přímo fokusovat na pozici %d\n", ram_target->index);
+    } else {
+        printf("\n❌ PROBLÉM: Objekt nenalezen v kompletní struktuře\n");
+    }
+}
+
 int main() {
     char filepath[MAX_PATH_LEN];
     char output_file[MAX_PATH_LEN];
+    char window_title[512];
     
-    printf("=== TwinCAT POUs Structure Analyzer ===\n\n");
+    printf("=== TwinCAT Smart Navigator ===\n\n");
     
-    // Ziskani cesty k aktualnimu TwinCAT souboru
+    // Ziskani cesty k aktualnimu TwinCAT souboru (pouzijeme existujici funkci)
     if (GetTwinCATCurrentFile(filepath)) {
         printf("Nalezen TwinCAT soubor: %s\n", filepath);
         
-        // Kontrola existence souboru
-        FILE* test = fopen(filepath, "r");
-        if (!test) {
-            printf("Soubor neni dostupny na predpokladane ceste.\n");
-            printf("Zadejte spravnou cestu k souboru %s: ", strrchr(filepath, '\\') ? strrchr(filepath, '\\') + 1 : filepath);
-            
-            char new_path[MAX_PATH_LEN];
-            fgets(new_path, sizeof(new_path), stdin);
-            
-            // Odstraneni newline
-            char* newline = strchr(new_path, '\n');
-            if (newline) *newline = '\0';
-            
-            strcpy(filepath, new_path);
-        } else {
-            fclose(test);
+        // Ziskame titulek okna znovu pro analyzu
+        HWND hwnd = NULL;
+        while ((hwnd = FindWindowEx(NULL, hwnd, NULL, NULL)) != NULL) {
+            int title_len = GetWindowText(hwnd, window_title, sizeof(window_title));
+            if (title_len > 0 && strstr(window_title, "TwinCAT")) {
+                break;
+            }
         }
+        printf("📱 TwinCAT okno: %s\n", window_title);
     } else {
-        // Fallback - zeptame se uzivatele
-        printf("TwinCAT okno nenalezeno. Zadejte cestu k souboru: ");
-        fgets(filepath, sizeof(filepath), stdin);
-        
-        // Odstraneni newline
-        char* newline = strchr(filepath, '\n');
-        if (newline) *newline = '\0';
+        printf("❌ TwinCAT okno nenalezeno\n");
+        printf("Stisknete Enter pro ukonceni...");
+        getchar();
+        return 1;
     }
     
     // Finalni kontrola existence souboru
@@ -485,10 +885,49 @@ int main() {
         return 1;
     }
     
-    // Vytvoreni nazvu vystupniho souboru
+    // === NOVA FUNKCIONALITA: DVA SEZNAMY SOUČASNĚ ===
+    printf("\n🧠 === CHYTRÝ NAVIGATION S DVĚMA SEZNAMY === 🧠\n");
+    
+    // 1. KOMPLETNÍ STRUKTURA ZE SOUBORU
+    printf("\n📁 === KOMPLETNÍ STRUKTURA ZE SOUBORU ===\n");
+    if (!LoadProjectStructure()) {
+        printf("❌ Chyba při načítání struktury ze souboru\n");
+        getchar();
+        return 1;
+    }
+    
+    // 2. AKTUÁLNÍ STAV Z RAM PAMĚTI
+    printf("\n💾 === AKTUÁLNÍ STAV Z RAM ===\n");
+    HWND hTwinCAT = NULL;
+    HWND hwnd = NULL;
+    while ((hwnd = FindWindowEx(NULL, hwnd, NULL, NULL)) != NULL) {
+        int title_len = GetWindowText(hwnd, window_title, sizeof(window_title));
+        if (title_len > 0 && strstr(window_title, "TwinCAT")) {
+            hTwinCAT = hwnd;
+            break;
+        }
+    }
+    
+    if (!LoadCurrentTreeFromRAM(hTwinCAT)) {
+        printf("❌ Chyba při načítání stromu z RAM\n");
+        getchar();
+        return 1;
+    }
+    
+    // 3. EXTRAKCE CÍLOVÉHO OBJEKTU Z TITULKU
+    char target_name[256] = "";
+    if (!ExtractTargetFromTitle(window_title, target_name, sizeof(target_name))) {
+        printf("❌ Nelze extrahovat cílový objekt z titulku\n");
+        getchar();
+        return 1;
+    }
+    
+    // 4. POROVNÁNÍ A ANALÝZA
+    CompareFileVsRAM(target_name, hTwinCAT);
+    
+    // Puvodni funkcionalita - XML zapis
     sprintf(output_file, "project_explorer_structure.xml");
     
-    // Zapis do XML
     if (WriteToXML(output_file)) {
         printf("\n=== HOTOVO ===\n");
         printf("POUs struktura byla uspesne analyzovana a zapsana do: %s\n", output_file);
