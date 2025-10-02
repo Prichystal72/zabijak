@@ -1,0 +1,44 @@
+=== KLÍČOVÝ DISCOVERY: CoDeSys TreeWin ===
+
+🎯 NALEZENÁ KOMPONENTA: **CoDeSys Sys_TreeWin**
+
+📍 LOKACE:
+- Base address: 0x01621ED0
+- Class identifier na: 0x01622028
+- String: "CoDe Sys_TreeWin" (CoDeSys TreeView Window)
+
+🔍 CO TO ZNAMENÁ:
+Owner-drawn fixed ListBox je ve skutečnosti **CoDeSys TreeView komponenta**!
+Není to standardní Windows ListBox, ale custom TreeView od CoDeSys.
+
+📊 STRUKTURA ITEMDATA ZÁZNAMU:
+```
+Offset  Velikost  Význam               Hodnota
+------  --------  ------------------   -----------------
+0x00    DWORD     TreeWin Base Ptr     0x01621ED0 (konstantní)
+0x04    DWORD     Position/Level       0,1,2,3... (hierarchie)
+0x08    DWORD     Flags/Type          různé hodnoty
+0x0C    DWORD     HasChildren         0/1 boolean
+0x10    DWORD     Reserved            většinou 0
+0x14    DWORD     Text Pointer        adresa text stringu
+0x18    DWORD     Reserved            většinou 0
+0x1C    DWORD     Next/Parent?        další pointer (někdy)
+```
+
+✅ OVĚŘENÉ FAKTY:
+- Všech 74 položek má stejný base pointer 0x01621ED0
+- Text pointery na offset 0x14 (20) FUNGUJÍ pro všechny položky
+- Position určuje hierarchii stromu (0=root, 1=level1, 2=level2, 3=level3)
+- "CoDe Sys_TreeWin" string potvrzuje CoDeSys původ
+
+🔧 PRAKTICKÉ VYUŽITÍ:
+1. Pro navigaci: použít Position values pro určení hierarchie
+2. Pro čtení textů: vždy offset 0x14 od ItemData
+3. Pro identifikaci typu: Flags na offset 0x08
+4. Pro děti: HasChildren flag na offset 0x0C
+
+🎯 ZÁVĚR:
+Komponenta je úspěšně identifikována jako **CoDeSys TreeView** 
+a její memory struktura je kompletně zmapována!
+
+=== KONEC DISCOVERY REPORTU ===

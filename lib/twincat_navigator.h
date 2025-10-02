@@ -52,4 +52,9 @@ int SearchInLevel(TreeItem* items, int count, const char* searchText);
 int FindAndOpenPath(HWND hListBox, HANDLE hProcess, const char* searchText);
 int FindItemByText(TreeItem* items, int count, const char* searchText);
 
+// Memory analysis functions
+bool AnalyzeFullMemoryStructure(HANDLE hProcess, const char* outputFileName);
+bool SearchInMemoryDump(HANDLE hProcess, const char* searchText, char* outputFileName);
+int ExtractAllItemsFromMemory(HANDLE hProcess, TreeItem* items, int maxItems);
+
 #endif // TWINCAT_NAVIGATOR_H
