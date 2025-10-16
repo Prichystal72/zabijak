@@ -17,6 +17,10 @@ Smart Navigator řeší komplexní automatizaci práce s TwinCAT PLC projekty:
 - ✅ **Export & Compare** - Srovnání file struktury vs aktuální stav
 - ⚠️ **Memory reading** - ExtractTreeItem() debugging v průběhu
 
+
+## !!! fukční analyza otevřené struktury v listu je test_show_all
+
+
 ## 📁 Současná struktura projektu (v2.0)
 
 ```
