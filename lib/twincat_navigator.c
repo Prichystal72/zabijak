@@ -18,7 +18,7 @@ HWND FindTwinCatWindow(void) {
 
 // Najde project explorer ListBox
 HWND FindProjectListBox(HWND parentWindow) {
-    printf("🔍 Hledám project explorer ListBox...\n");
+    printf("Hledam project explorer ListBox...\n");
 
     HWND bestListBox = NULL;
     int bestScore = 0;
@@ -38,11 +38,11 @@ HWND FindProjectListBox(HWND parentWindow) {
             int itemCount = SendMessage(childWindow, LB_GETCOUNT, 0, 0);
             int height = rect.bottom - rect.top;
 
-            // Skóre pro výběr nejlepšího ListBoxu
+            // Skore pro vyber nejlepsiho ListBoxu
             int score = itemCount + height / 10;
-            if (rect.left < windowWidth / 3) score += 100; // Bonus za levé umístění
+            if (rect.left < windowWidth / 3) score += 100; // Bonus za leve umisteni
 
-            printf("  ListBox 0x%p: pozice (%d,%d), velikost %dx%d, položek: %d, skóre: %d\n",
+            printf("  ListBox 0x%p: pozice (%d,%d), velikost %dx%d, polozek: %d, skore: %d\n",
                    childWindow, rect.left, rect.top,
                    rect.right - rect.left, height, itemCount, score);
 
@@ -68,7 +68,7 @@ HWND FindProjectListBox(HWND parentWindow) {
                 int score = itemCount + height / 10;
                 if (rect.left < windowWidth / 3) score += 100;
 
-                printf("    Sub-ListBox 0x%p: pozice (%d,%d), velikost %dx%d, položek: %d, skóre: %d\n",
+                printf("    Sub-ListBox 0x%p: pozice (%d,%d), velikost %dx%d, polozek: %d, skore: %d\n",
                        subChild, rect.left, rect.top,
                        rect.right - rect.left, height, itemCount, score);
 
@@ -85,27 +85,27 @@ HWND FindProjectListBox(HWND parentWindow) {
     }
 
     if (bestListBox) {
-        printf("✅ Nejlepší ListBox: 0x%p (skóre: %d)\n", bestListBox, bestScore);
+        printf("Nejlepsi ListBox: 0x%p (skore: %d)\n", bestListBox, bestScore);
     } else {
-        printf("❌ Žádný vhodný ListBox nenalezen!\n");
+        printf("Zadny vhodny ListBox nenalezen!\n");
     }
 
     return bestListBox;
 }
 
-// Otevře TwinCAT proces pro čtení paměti
+// Otevre TwinCAT proces pro cteni pameti
 HANDLE OpenTwinCatProcess(HWND hListBox) {
     DWORD processId;
     GetWindowThreadProcessId(hListBox, &processId);
     return OpenProcess(PROCESS_VM_READ, FALSE, processId);
 }
 
-// Získá počet položek v ListBoxu
+// Ziska pocet polozek v ListBoxu
 int GetListBoxItemCount(HWND hListBox) {
     return SendMessage(hListBox, LB_GETCOUNT, 0, 0);
 }
 
-// Extrahuje jednu položku stromu
+// Extrahuje jednu polozku stromu
 bool ExtractTreeItem(HANDLE hProcess, HWND hListBox, int index, TreeItem* item) {
     if (!item) return false;
     
@@ -113,13 +113,13 @@ bool ExtractTreeItem(HANDLE hProcess, HWND hListBox, int index, TreeItem* item) 
     memset(item, 0, sizeof(TreeItem));
     item->index = index;
     
-    // Získej ItemData
+    // Ziskej ItemData
     LRESULT itemData = SendMessage(hListBox, LB_GETITEMDATA, index, 0);
     if (itemData == LB_ERR || itemData == 0) return false;
     
     item->itemData = (DWORD)itemData;
     
-    // Přečti strukturu ItemData
+    // Precti strukturu ItemData
     DWORD structure[10];
     SIZE_T bytesRead;
     
@@ -132,65 +132,99 @@ bool ExtractTreeItem(HANDLE hProcess, HWND hListBox, int index, TreeItem* item) 
     // Parse struktury
     item->position = structure[1];      // Pozice v hierarchii
     item->flags = structure[2];         // Flags
-    item->hasChildren = structure[3];   // Má podpoložky
+    item->hasChildren = structure[3];   // Ma podpolozky
     item->textPtr = structure[5];       // Text pointer (offset 20)
     
-    // Načti text
+    // Nacti text (format: [metadata - 4-5 bajtu] [text...])
+    // Ruzne polozky maji metadata ruzne delky, proto zkousime offset 1 a 5
     if (item->textPtr > 0x400000 && item->textPtr < 0x80000000) {
-        char textBuffer[MAX_TEXT_LENGTH] = {0};
+        char textBuffer[MAX_TEXT_LENGTH + 10] = {0};
         SIZE_T textRead;
         
         if (ReadProcessMemory(hProcess, (void*)item->textPtr, textBuffer, sizeof(textBuffer)-1, &textRead)) {
-            // Text začíná na pozici 1 (přeskoč null byte)
-            strncpy(item->text, textBuffer + 1, MAX_TEXT_LENGTH - 1);
-            item->text[MAX_TEXT_LENGTH - 1] = '\0';
+            // Zkus offset 1 (vetsi polozek - za jednim null bytem)
+            int offset = 1;
+            char* text = textBuffer + offset;
+            
+            // Kontrola, zda je na offsetu 1 validni text
+            if (offset < textRead && text[0] >= 32 && text[0] <= 126) {
+                size_t len = 0;
+                while (len < MAX_TEXT_LENGTH - 1 && offset + len < textRead && 
+                       text[len] >= 32 && text[len] <= 126) {
+                    len++;
+                }
+                
+                if (len >= 3) {
+                    strncpy(item->text, text, len);
+                    item->text[len] = '\0';
+                }
+            }
+            
+            // Pokud offset 1 nevysel, zkus offset 5 (za DWORD + null byte)
+            if (strlen(item->text) < 3 && textRead > 5) {
+                offset = 5;
+                text = textBuffer + offset;
+                
+                if (text[0] >= 32 && text[0] <= 126) {
+                    size_t len = 0;
+                    while (len < MAX_TEXT_LENGTH - 1 && offset + len < textRead && 
+                           text[len] >= 32 && text[len] <= 126) {
+                        len++;
+                    }
+                    
+                    if (len >= 3) {
+                        strncpy(item->text, text, len);
+                        item->text[len] = '\0';
+                    }
+                }
+            }
         }
     }
     
-    // Určení typu a ikony podle flags
+    // Urceni typu a ikony podle flags
     switch(item->flags) {
         case FLAG_FOLDER:  
             item->type = "FOLDER"; 
-            item->icon = "📁"; 
+            item->icon = "[F]"; 
             item->level = (item->position == 0) ? 0 : 1;
             break;
         case FLAG_FILE:    
             item->type = "FILE"; 
-            item->icon = "📄"; 
+            item->icon = "[f]"; 
             item->level = 2;
             break;
         case FLAG_SPECIAL: 
             item->type = "SPECIAL"; 
-            item->icon = "⚙️"; 
+            item->icon = "[S]"; 
             item->level = 1;
             break;
         case FLAG_ACTION:  
             item->type = "ACTION"; 
-            item->icon = "🔧"; 
+            item->icon = "[A]"; 
             item->level = 2;
             break;
         default:           
             item->type = "OTHER"; 
-            item->icon = "❓"; 
+            item->icon = "[?]"; 
             item->level = 0;
             break;
     }
     
-    // Speciální úpravy levelu
+    // Specialni upravy levelu
     if (strcmp(item->text, "POUs") == 0) item->level = 0;
     else if (item->position >= 4) item->level = 2;
     
     return strlen(item->text) > 0;
 }
 
-// Zobrazí strukturu stromu
+// Zobrazi strukturu stromu
 void PrintTreeStructure(TreeItem* items, int count) {
     printf("=== STRUKTURA STROMU TWINCAT ===\n\n");
     
     for (int i = 0; i < count; i++) {
         TreeItem* item = &items[i];
         
-        // Odsazení podle úrovně
+        // Odsazeni podle urovne
         for (int j = 0; j < item->level; j++) {
             printf("  ");
         }
@@ -204,20 +238,122 @@ void PrintTreeStructure(TreeItem* items, int count) {
         #endif
     }
     
-    printf("\nCelkem: %d položek\n", count);
+    printf("\nCelkem: %d polozek\n", count);
 }
 
-// Rozbalí všechny složky (základní implementace)
+// Rozbali vsechny slozky (zakladni implementace)
 bool ExpandAllFolders(HWND hListBox) {
-    // TODO: Implementovat rozbalování pomocí klávesnice
-    // Zatím jen placeholder
+    // TODO: Implementovat rozbalovani pomoci klavesnice
+    // Zatim jen placeholder
     return false;
 }
 
-// Zaměří se na položku
+// Zameri se na polozku
 bool FocusOnItem(HWND hListBox, int index) {
     LRESULT result = SendMessage(hListBox, LB_SETCURSEL, index, 0);
     return (result != LB_ERR);
+}
+
+// Zjisti, zda je polozka otevrena (ma viditelne podpolozky)
+bool IsItemExpanded(HWND hListBox, HANDLE hProcess, int index) {
+    int totalCount = SendMessage(hListBox, LB_GETCOUNT, 0, 0);
+    
+    // Pokud je to posledni polozka, nemuze mit viditelne deti
+    if (index >= totalCount - 1) {
+        return false;
+    }
+    
+    // Nacti level aktualni polozky
+    LRESULT itemData = SendMessage(hListBox, LB_GETITEMDATA, index, 0);
+    if (itemData == LB_ERR || itemData == 0) {
+        return false;
+    }
+    
+    DWORD structure[STRUCT_FIELD_COUNT] = {0};
+    SIZE_T bytesRead = 0;
+    
+    if (!ReadProcessMemory(hProcess, (void*)itemData, structure, sizeof(structure), &bytesRead) || bytesRead < 24) {
+        return false;
+    }
+    
+    int currentLevel = (int)structure[1];  // Level je na offsetu 1
+    
+    // Nacti level dalsi polozky
+    LRESULT nextItemData = SendMessage(hListBox, LB_GETITEMDATA, index + 1, 0);
+    if (nextItemData == LB_ERR || nextItemData == 0) {
+        return false;
+    }
+    
+    DWORD nextStructure[STRUCT_FIELD_COUNT] = {0};
+    SIZE_T nextBytesRead = 0;
+    
+    if (!ReadProcessMemory(hProcess, (void*)nextItemData, nextStructure, sizeof(nextStructure), &nextBytesRead) || nextBytesRead < 24) {
+        return false;
+    }
+    
+    int nextLevel = (int)nextStructure[1];
+    
+    // Pokud dalsi polozka ma vyssi level, znamena to ze aktualni polozka je otevrena
+    return nextLevel > currentLevel;
+}
+
+// Zjisti stav slozky pomoci structure[3] (spolehlivejsi nez IsItemExpanded)
+// Vraci: 1 = otevrena (ma viditelne deti), 0 = zavrena, -1 = chyba
+int GetFolderState(HWND hListBox, HANDLE hProcess, int index) {
+    // Nacti ItemData
+    LRESULT itemData = SendMessage(hListBox, LB_GETITEMDATA, index, 0);
+    if (itemData == LB_ERR || itemData == 0) {
+        return -1;  // Chyba
+    }
+    
+    // Nacti strukturu
+    DWORD structure[STRUCT_FIELD_COUNT] = {0};
+    SIZE_T bytesRead = 0;
+    
+    if (!ReadProcessMemory(hProcess, (void*)itemData, structure, sizeof(structure), &bytesRead) || bytesRead < 24) {
+        return -1;  // Chyba cteni
+    }
+    
+    // structure[3] obsahuje stav slozky:
+    // 0 = zavrena / nema viditelne deti
+    // 1 = otevrena / ma viditelne deti
+    return (int)structure[3];
+}
+
+// Prepne (otevre/zavre) polozku v ListBoxu
+// Vraci: pocet nove zobrazenych polozek (kladne = otevreno, zaporne = zavreno, 0 = chyba nebo zadna zmena)
+int ToggleListBoxItem(HWND hListBox, int index) {
+    // Ziskej pocet polozek PRED akci
+    int countBefore = SendMessage(hListBox, LB_GETCOUNT, 0, 0);
+    if (countBefore == LB_ERR) {
+        return 0;
+    }
+    
+    // Zamer na ListBox
+    SetFocus(hListBox);
+    Sleep(50);
+    
+    // Vyber polozku
+    LRESULT result = SendMessage(hListBox, LB_SETCURSEL, index, 0);
+    if (result == LB_ERR) {
+        return 0;
+    }
+    Sleep(50);
+    
+    // Posli RETURN pro otevreni/zavreni
+    PostMessage(hListBox, WM_KEYDOWN, VK_RETURN, 0);
+    PostMessage(hListBox, WM_KEYUP, VK_RETURN, 0);
+    
+    Sleep(100);  // Pauza pro dokonceni akce
+    
+    // Ziskej pocet polozek PO akci
+    int countAfter = SendMessage(hListBox, LB_GETCOUNT, 0, 0);
+    if (countAfter == LB_ERR) {
+        return 0;
+    }
+    
+    // Vrat rozdil (+ = otevreno, - = zavreno)
+    return countAfter - countBefore;
 }
 
 // Analyzuje celou paměť procesu a najde všechny textové řetězce (WORKING VERSION)
@@ -339,6 +475,106 @@ bool AnalyzeFullMemoryStructure(HANDLE hProcess, const char* outputFileName) {
     if (targetFound) {
         printf("🏆 TARGET ST_Markiere_WT_NIO byl nalezen!\n");
     }
+    
+    return foundItems > 0;
+}
+
+// NOVÁ FUNKCE: Hledá kompletní projektovou strukturu v paměti (všechny ST_ položky)
+bool SearchCompleteProjectStructure(HANDLE hProcess, const char* outputFileName) {
+    printf("🧠 === HLEDÁNÍ KOMPLETNÍ PROJEKTOVÉ STRUKTURY ===\n");
+    printf("🎯 Hledám všechny ST_ položky v celé paměti procesu...\n");
+    
+    FILE* file = fopen(outputFileName, "w");
+    if (!file) {
+        printf("❌ Nelze vytvořit soubor %s\n", outputFileName);
+        return false;
+    }
+    
+    fprintf(file, "=== KOMPLETNÍ PROJEKTOVÁ STRUKTURA V PAMĚTI ===\n");
+    fprintf(file, "Hledání všech ST_ položek nezávisle na TreeView stavu\n\n");
+    
+    MEMORY_BASIC_INFORMATION mbi;
+    LPBYTE currentAddress = (LPBYTE)0x400000;
+    int foundItems = 0;
+    int totalRegions = 0;
+    
+    while (currentAddress < (LPBYTE)0x80000000) {
+        SIZE_T result = VirtualQueryEx(hProcess, currentAddress, &mbi, sizeof(mbi));
+        
+        if (result == 0) {
+            currentAddress += 0x10000;
+            continue;
+        }
+        
+        // Prohledej jen committed readable paměť
+        if ((mbi.State == MEM_COMMIT) && 
+            (mbi.Protect & (PAGE_READONLY | PAGE_READWRITE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE))) {
+            
+            totalRegions++;
+            
+            SIZE_T regionSize = mbi.RegionSize;
+            if (regionSize > 0x100000) regionSize = 0x100000; // Max 1MB
+            
+            BYTE* buffer = malloc(regionSize);
+            if (buffer) {
+                SIZE_T bytesRead;
+                if (ReadProcessMemory(hProcess, mbi.BaseAddress, buffer, regionSize, &bytesRead)) {
+                    
+                    // Hledej všechny ST_ stringy
+                    for (SIZE_T i = 0; i < bytesRead - 10; i++) {
+                        if (buffer[i] == 'S' && buffer[i+1] == 'T' && buffer[i+2] == '_') {
+                            char textBuffer[256] = {0};
+                            int textLen = 0;
+                            
+                            // Extrahuj celý ST_ název
+                            for (int j = 0; j < 255 && (i + j) < bytesRead; j++) {
+                                char c = buffer[i + j];
+                                if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || 
+                                    (c >= '0' && c <= '9') || c == '_') {
+                                    textBuffer[textLen++] = c;
+                                } else {
+                                    break;
+                                }
+                            }
+                            
+                            // Zapiš jen validní ST_ názvy (min 4 znaky)
+                            if (textLen >= 4) {
+                                textBuffer[textLen] = '\0';
+                                DWORD address = (DWORD)((LPBYTE)mbi.BaseAddress + i);
+                                
+                                fprintf(file, "[%08lX] %s\n", address, textBuffer);
+                                foundItems++;
+                                
+                                // Zvýrazni target
+                                if (strcmp(textBuffer, "ST_Markiere_WT_NIO") == 0) {
+                                    fprintf(file, "    🎯 >>> TARGET NALEZEN V PAMĚTI! <<<\n");
+                                    printf("🎯 TARGET nalezen v paměti na: 0x%08lX\n", address);
+                                }
+                                
+                                // Progress info každých 100 položek
+                                if (foundItems % 100 == 0) {
+                                    printf("  📊 Nalezeno %d ST_ položek...\n", foundItems);
+                                }
+                            }
+                        }
+                    }
+                }
+                free(buffer);
+            }
+        }
+        
+        currentAddress = (LPBYTE)mbi.BaseAddress + mbi.RegionSize;
+    }
+    
+    fprintf(file, "\n=== SOUHRN KOMPLETNÍ STRUKTURY ===\n");
+    fprintf(file, "Prohledáno paměťových regionů: %d\n", totalRegions);
+    fprintf(file, "Nalezeno celkem ST_ položek: %d\n", foundItems);
+    fprintf(file, "Poznámka: Zahrnuje všechny ST_ položky v paměti, ne jen TreeView\n");
+    
+    fclose(file);
+    
+    printf("✅ Kompletní struktura analyzována: %d ST_ položek nalezeno\n", foundItems);
+    printf("📁 Kompletní dump uložen do: %s\n", outputFileName);
     
     return foundItems > 0;
 }

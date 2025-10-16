@@ -47,6 +47,9 @@ void PrintTreeStructure(TreeItem* items, int count);
 bool ExpandAllFolders(HWND hListBox);
 bool CloseFolder(HWND hListBox, int index);
 bool FocusOnItem(HWND hListBox, int index);
+bool IsItemExpanded(HWND hListBox, HANDLE hProcess, int index);  // Zjistí, zda je položka otevřená (level comparison)
+int GetFolderState(HWND hListBox, HANDLE hProcess, int index);   // Vrací stav složky: 1=otevřená, 0=zavřená, -1=chyba (používá structure[3])
+int ToggleListBoxItem(HWND hListBox, int index);  // Vrací rozdíl v počtu položek (+ při otevření, - při zavření)
 bool ExtractTargetFromTitle(const char* windowTitle, char* targetText, int maxLength);
 int SearchInLevel(TreeItem* items, int count, const char* searchText);
 int FindAndOpenPath(HWND hListBox, HANDLE hProcess, const char* searchText);
@@ -54,6 +57,7 @@ int FindItemByText(TreeItem* items, int count, const char* searchText);
 
 // Memory analysis functions
 bool AnalyzeFullMemoryStructure(HANDLE hProcess, const char* outputFileName);
+bool SearchCompleteProjectStructure(HANDLE hProcess, const char* outputFileName);
 bool SearchInMemoryDump(HANDLE hProcess, const char* searchText, char* outputFileName);
 int ExtractAllItemsFromMemory(HANDLE hProcess, TreeItem* items, int maxItems);
 

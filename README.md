@@ -1,14 +1,14 @@
-# TwinCAT Smart Navigator
+# TwinCAT Navigator Library
 
-**Verze:** 2.0.0-alpha  
-**Datum:** 1. října 2025  
-**Status:** 🔧 V aktivním vývoji - memory reading debugging
+**Verze:** 3.0.0-stable  
+**Datum:** 6. října 2025  
+**Status:** ✅ Funkční knihovna pro čtení TwinCAT TreeView
 
-Inteligentní navigace a analýza TwinCAT PLC projektů s dual-mode parserem a externí path finder architekturou.
+Knihovna pro automatickou navigaci a čtení struktury TwinCAT PLC projektů přímo z paměti.
 
 ## 🎯 Účel
 
-Smart Navigator řeší komplexní automatizaci práce s TwinCAT PLC projekty:
+Navigator Library poskytuje robustní nástroje pro práci s TwinCAT projekty:
 
 - ✅ **Smart projekt detection** - Automatické nalezení TwinCAT oken a projektů
 - ✅ **Dual-mode parsing** - Podpora starších i novějších TwinCAT formátů (84.4% přesnost)
@@ -17,41 +17,107 @@ Smart Navigator řeší komplexní automatizaci práce s TwinCAT PLC projekty:
 - ✅ **Export & Compare** - Srovnání file struktury vs aktuální stav
 - ⚠️ **Memory reading** - ExtractTreeItem() debugging v průběhu
 
+## 📁 Struktura projektu (v3.0)
 
-## !!! fukční analyza otevřené struktury v listu je test_show_all
 
-
-## 📁 Současná struktura projektu (v2.0)
-
-```
-📦 twincat-smart-navigator/
-├── 🎯 HLAVNÍ PROGRAM
-│   ├── twincat_navigator_main.c     # Smart navigator s menu (hlavní)
-│   └── twincat_navigator_main.exe   # Zkompilovaný program
-├── 🔧 CORE MODULY  
-│   ├── twincat_project_parser.c/.h  # Dual-mode parser (84.4% přesnost)
-│   ├── twincat_path_finder.c/.h     # Externí path finder (3 metody)
-│   └── lib/twincat_navigator.c/.h   # Memory reading & ListBox funkce
-├── 🗂️ LEGACY & REFERENCE
-│   ├── navigator.c/.exe             # Původní verze (reference)
-│   └── PROJECT_MAP.md               # Detailní mapa architektury
-├── 🧪 TESTY & EXPERIMENTY
-│   └── tests/                       # Všechny testovací soubory
-├── 📊 DATA & KONFIGURACE
-│   ├── *.pro                        # TwinCAT testovací projekty
-│   ├── */                           # Export struktury (CELA, Palettierer)
-│   └── build_main.bat               # Hlavní build script
+📦 twincat-navigator/
+├── 📚 KNIHOVNA (CORE)
+│   ├── lib/twincat_navigator.c/.h   # Hlavní navigační knihovna
+│   │   ├── FindTwinCatWindow()      # Najde TwinCAT okno
+│   │   ├── FindProjectListBox()     # Najde project explorer
+│   │   ├── OpenTwinCatProcess()     # Otevře proces pro čtení
+│   │   ├── GetListBoxItemCount()    # Počet položek v ListBoxu
+│   │   ├── ExtractTreeItem()        # Čte položku z paměti (offset 1 a 5)
+│   │   ├── GetFolderState()         # Stav složky (structure[3]: 0/1)
+│   │   ├── IsItemExpanded()         # Stav složky (level comparison)
+│   │   ├── ToggleListBoxItem()      # Otevře/zavře složku
+│   │   └── PrintTreeStructure()     # Zobrazí strom
+│   └── lib/twincat_search.c/.h      # Vyhledávací funkce (placeholder)
+├── 🧪 TESTY (VŠECHNY FUNKČNÍ)
+│   ├── test_show_all.exe            # ✅ Zobrazí všechny položky v ListBoxu
+│   ├── test_basic_functions.exe     # ✅ Testy 5 základních funkcí
+│   ├── test_folder_state.exe        # ✅ Porovnání IsItemExpanded vs GetFolderState
+│   ├── test_simple_toggle.exe       # ✅ Test otevírání/zavírání složky
+│   ├── test_decode_flags.exe        # ✅ Analýza flags (0x0205F5 vs 0x0205F7)
+│   ├── test_structure_analysis.exe  # ✅ Analýza ItemData struktury
+│   └── test_item_9_debug.exe        # ✅ Debug Serielle Kommunikation
+├── 🔧 BUILD SKRIPTY
+│   ├── build64.bat                  # Build pro 64-bit
+│   ├── build32.bat                  # Build pro 32-bit
+│   ├── cleanup.bat                  # Vyčistí workspace
+│   └── cleanup_tests.bat            # Vyčistí testy
 └── 📖 DOKUMENTACE
     ├── README.md                    # Tento soubor
-    └── README_API.md                # API dokumentace
+    ├── README_API.md                # API dokumentace
+    └── PROJECT_MAP.md               # Mapa architektury
 ```
 
 ## 🔧 Kompilace
 
-### 🚀 Doporučené (hlavní program):
+### 🚀 Kompilace testů:
 ```bash
-# Použij hlavní build script
-build_main.bat
+cd tests
+gcc -o test_show_all.exe test_show_all.c ../lib/twincat_navigator.c -luser32 -lpsapi -I..
+gcc -o test_folder_state.exe test_folder_state.c ../lib/twincat_navigator.c -luser32 -lpsapi -I..
+```
+
+### 📝 Rychlé spuštění testů:
+
+**1. Zobrazit všechny položky:**
+```powershell
+cd tests ; .\test_show_all.exe
+```
+
+**2. Test detekce stavu složek:**
+```powershell
+cd tests ; .\test_folder_state.exe
+```
+
+**3. Test základních funkcí:**
+```powershell
+cd tests ; .\test_basic_functions.exe
+```
+
+## ✅ Funkční testy
+
+Všech **7 testů** je plně funkčních:
+
+| Test | Status | Popis |
+|------|--------|-------|
+| `test_show_all` | ✅ | Zobrazí všechny viditelné položky s indexy, flags a levely |
+| `test_basic_functions` | ✅ | Validuje 5 základních funkcí knihovny |
+| `test_folder_state` | ✅ | Porovnává `IsItemExpanded()` vs `GetFolderState()` |
+| `test_simple_toggle` | ✅ | Testuje otevírání/zavírání složek |
+| `test_decode_flags` | ✅ | Analyzuje význam flags (0x0205F5 = POUs, 0x0205F7 = folders) |
+| `test_structure_analysis` | ✅ | Odhaluje strukturu ItemData (structure[3] = folder state) |
+| `test_item_9_debug` | ✅ | Debug položky s offsetem 5 (Serielle Kommunikation) |
+
+### Testovací workflow:
+
+1. **Otevři TwinCAT projekt** v TwinCAT PLC Control
+2. **Spusť test** (např. `.\test_show_all.exe`)
+3. **Ručně upravuj složky** v TwinCAT (otevírej/zavírej)
+4. **Spusť test znovu** pro kontrolu změn
+
+## 🔍 Klíčové objevy
+
+### ItemData struktura:
+```c
+structure[0] = 0x01621ED0  // Pointer (parent/meta)
+structure[1] = level       // 0, 1, 2... (hierarchie)
+structure[2] = flags       // 0x0205F5 (POUs), 0x0205F7 (folders)
+structure[3] = folder_state // 0 = zavřená, 1 = otevřená ⭐
+structure[5] = text_ptr    // Pointer na text
+```
+
+### Text offset:
+- **Většina položek**: offset **1** (za null bytem)
+- **Některé položky**: offset **5** (za DWORD metadata + null byte)
+- **Knihovna**: automaticky zkouší oba offsety
+
+### Folder state detection:
+- **`GetFolderState()`**: Čte `structure[3]` - **spolehlivější** ⭐
+- **`IsItemExpanded()`**: Porovnává levely - kompatibilní fallback
 ```
 
 ### Ruční kompilace:
