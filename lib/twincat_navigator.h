@@ -44,7 +44,8 @@ HANDLE OpenTwinCatProcess(HWND hListBox);
 int GetListBoxItemCount(HWND hListBox);
 bool ExtractTreeItem(HANDLE hProcess, HWND hListBox, int index, TreeItem* item);
 void PrintTreeStructure(TreeItem* items, int count);
-bool ExpandAllFolders(HWND hListBox);
+bool ExpandAllFolders(HWND hListBox, HANDLE hProcess);
+bool CollapseAllFolders(HWND hListBox, HANDLE hProcess);
 bool CloseFolder(HWND hListBox, int index);
 bool FocusOnItem(HWND hListBox, int index);
 bool IsItemExpanded(HWND hListBox, HANDLE hProcess, int index);  // Zjistí, zda je položka otevřená (level comparison)

@@ -75,6 +75,16 @@ int main() {
         printf("\n[OK] Cache vytvoren, ulozen a slozky zavreny!\n");
     }
     
+    // Test odznaceni - LB_SETTOPINDEX
+    printf("\n=== TEST: Pokus o odznaceni ===\n");
+    printf("Nastavuji LB_SETTOPINDEX na 0...\n");
+    SendMessage(listbox, LB_SETTOPINDEX, 2, 0);
+    Sleep(50);
+    printf("Nastavuji LB_SETCURSEL na -1...\n");
+    SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
+    Sleep(50);
+    printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");
+    
     CloseHandle(hProcess);
     
     printf("\n===================================================\n");

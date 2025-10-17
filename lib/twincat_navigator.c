@@ -217,35 +217,78 @@ bool ExtractTreeItem(HANDLE hProcess, HWND hListBox, int index, TreeItem* item) 
     return strlen(item->text) > 0;
 }
 
-// Zobrazi strukturu stromu
-void PrintTreeStructure(TreeItem* items, int count) {
-    printf("=== STRUKTURA STROMU TWINCAT ===\n\n");
-    
-    for (int i = 0; i < count; i++) {
-        TreeItem* item = &items[i];
-        
-        // Odsazeni podle urovne
-        for (int j = 0; j < item->level; j++) {
-            printf("  ");
-        }
-        
-        printf("[%02d] %s %s\n", item->index, item->icon, item->text);
-        
-        // Debug info (volitelné)
-        #ifdef DEBUG_MODE
-        printf("     (pos=%d, flags=0x%06X, children=%d, ptr=0x%08X)\n", 
-               item->position, item->flags, item->hasChildren, item->textPtr);
-        #endif
+// Rozbali vsechny slozky (zakladni implementace)
+bool ExpandAllFolders(HWND hListBox, HANDLE hProcess) {
+    if (!hListBox || !hProcess) {
+        return false;
     }
     
-    printf("\nCelkem: %d polozek\n", count);
+    bool changed = true;
+    int iteration = 0;
+    int totalExpanded = 0;
+    
+    // Opakuj, dokud se nejaka slozka expanduje
+    while (changed && iteration < 100) {
+        changed = false;
+        int itemCount = GetListBoxItemCount(hListBox);
+        
+        for (int i = 0; i < itemCount; i++) {
+            TreeItem item;
+            if (!ExtractTreeItem(hProcess, hListBox, i, &item)) {
+                continue;
+            }
+            
+            int folderState = GetFolderState(hListBox, hProcess, i);
+            
+            // Ma deti a je zavrena?
+            if (item.hasChildren && folderState == 0) {
+                int countBefore = itemCount;
+                ToggleListBoxItem(hListBox, i);
+                Sleep(10);  // Minimalni pauza
+                SendMessage(hListBox, LB_SETCURSEL, (WPARAM)-1, 0);  // Deselect
+                
+                int countAfter = GetListBoxItemCount(hListBox);
+                if (countAfter > countBefore) {
+                    totalExpanded++;
+                    changed = true;
+                    break;  // Zacni novou iteraci
+                }
+            }
+        }
+        iteration++;
+    }
+    
+    return (totalExpanded > 0);
 }
 
-// Rozbali vsechny slozky (zakladni implementace)
-bool ExpandAllFolders(HWND hListBox) {
-    // TODO: Implementovat rozbalovani pomoci klavesnice
-    // Zatim jen placeholder
-    return false;
+// Zavri vsechny slozky (chytra verze - odzadu podle levelu)
+bool CollapseAllFolders(HWND hListBox, HANDLE hProcess) {
+    if (!hListBox || !hProcess) {
+        return false;
+    }
+    
+    int itemCount = GetListBoxItemCount(hListBox);
+    int totalClosed = 0;
+    
+    // Projdi ODZADU a zavri otevrene slozky na L2+
+    for (int i = itemCount - 1; i >= 0; i--) {
+        TreeItem item;
+        if (!ExtractTreeItem(hProcess, hListBox, i, &item)) {
+            continue;
+        }
+        
+        int folderState = GetFolderState(hListBox, hProcess, i);
+        
+        // Je to otevrena slozka na L2+?
+        if (item.hasChildren && folderState == 1 && item.position >= 2) {
+            ToggleListBoxItem(hListBox, i);
+            Sleep(1);
+            SendMessage(hListBox, LB_SETCURSEL, (WPARAM)-1, 0);
+            totalClosed++;
+        }
+    }
+    
+    return (totalClosed > 0);
 }
 
 // Zameri se na polozku
@@ -331,20 +374,20 @@ int ToggleListBoxItem(HWND hListBox, int index) {
     
     // Zamer na ListBox
     SetFocus(hListBox);
-    Sleep(50);
+    Sleep(1);
     
     // Vyber polozku
     LRESULT result = SendMessage(hListBox, LB_SETCURSEL, index, 0);
     if (result == LB_ERR) {
         return 0;
     }
-    Sleep(50);
+    Sleep(1);
     
     // Posli RETURN pro otevreni/zavreni
     PostMessage(hListBox, WM_KEYDOWN, VK_RETURN, 0);
     PostMessage(hListBox, WM_KEYUP, VK_RETURN, 0);
     
-    Sleep(100);  // Pauza pro dokonceni akce
+    Sleep(1);  // Pauza pro dokonceni akce
     
     // Ziskej pocet polozek PO akci
     int countAfter = SendMessage(hListBox, LB_GETCOUNT, 0, 0);

@@ -49,6 +49,7 @@ Automaticky expanduje všechny složky v projektu, načte celou strukturu a ulo�
    - Dynamické vyhledávání položek (indexy se mění při zavírání)
    - Cílí pouze složky, přeskakuje listy
    - Dramaticky rychlejší než původní metoda
+   - **Automatické odstranění modrého zvýraznění** - dvojité kliknutí na POUs na konci
 
 4. **JSON export** (`SaveCacheToFile`)
    - Timestamp vytvoření

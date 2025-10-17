@@ -167,6 +167,23 @@ void CollapseAllFoldersFromCache(HWND listbox, HANDLE hProcess, CachedItem* cach
         printf("    Zavreno: %d slozek\n", closedCount);
     }
     
+    // Dvojite kliknuti na POUs pro vymazani modreho zvyrazneni
+    printf("  Odstranuji modre zvyrazneni (dvojite kliknuti na POUs)...\n");
+    SetFocus(listbox);
+    Sleep(100);
+    
+    // Prvni kliknuti - otevre POUs
+    SendMessage(listbox, LB_SETCURSEL, 0, 0);
+    Sleep(100);
+    PostMessage(listbox, WM_KEYDOWN, VK_RETURN, 0);
+    Sleep(500);
+    
+    // Druhe kliknuti - zavre POUs
+    SendMessage(listbox, LB_SETCURSEL, 0, 0);
+    Sleep(100);
+    PostMessage(listbox, WM_KEYDOWN, VK_RETURN, 0);
+    Sleep(500);
+    
     printf("[OK] Slozky zavreny!\n");
 }
 
