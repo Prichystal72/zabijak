@@ -258,18 +258,15 @@ int LoadCacheFromFile(const char* filename, CachedItem* cache, int maxItems) {
         }
         // Parsuj text
         else if (strstr(line, "\"text\":")) {
-            char* start = strchr(line, '"');
-            if (start) {
-                start = strchr(start + 1, '"');
-                if (start) {
-                    start++;
-                    char* end = strchr(start, '"');
-                    if (end) {
-                        int len = end - start;
-                        if (len > 255) len = 255;
-                        strncpy(cache[count].text, start, len);
-                        cache[count].text[len] = '\0';
-                    }
+            char* colon = strstr(line, ": \"");
+            if (colon) {
+                char* start = colon + 3;  // Preskoc ': "'
+                char* end = strchr(start, '"');
+                if (end) {
+                    int len = end - start;
+                    if (len > 255) len = 255;
+                    strncpy(cache[count].text, start, len);
+                    cache[count].text[len] = '\0';
                 }
             }
         }
@@ -279,18 +276,15 @@ int LoadCacheFromFile(const char* filename, CachedItem* cache, int maxItems) {
         }
         // Parsuj path
         else if (strstr(line, "\"path\":")) {
-            char* start = strchr(line, '"');
-            if (start) {
-                start = strchr(start + 1, '"');
-                if (start) {
-                    start++;
-                    char* end = strchr(start, '"');
-                    if (end) {
-                        int len = end - start;
-                        if (len > 1023) len = 1023;
-                        strncpy(cache[count].path, start, len);
-                        cache[count].path[len] = '\0';
-                    }
+            char* colon = strstr(line, ": \"");
+            if (colon) {
+                char* start = colon + 3;  // Preskoc ': "'
+                char* end = strchr(start, '"');
+                if (end) {
+                    int len = end - start;
+                    if (len > 1023) len = 1023;
+                    strncpy(cache[count].path, start, len);
+                    cache[count].path[len] = '\0';
                 }
             }
         }
@@ -315,10 +309,21 @@ int LoadCacheFromFile(const char* filename, CachedItem* cache, int maxItems) {
 
 // Najdi polozku v cache podle textu
 int FindInCache(CachedItem* cache, int count, const char* searchText) {
+    printf("[FindInCache] Hledam '%s' v %d polozkach...\n", searchText, count);
+    
+    // Debug: vypis polozku 18
+    if (count > 18) {
+        printf("[DEBUG] cache[18].text = '%s'\n", cache[18].text);
+        printf("[DEBUG] Porovnavam '%s' == '%s' ?\n", cache[18].text, searchText);
+    }
+    
     for (int i = 0; i < count; i++) {
         if (_stricmp(cache[i].text, searchText) == 0) {
+            printf("[FindInCache] NALEZENO na indexu %d: text='%s', path='%s'\n", 
+                   i, cache[i].text, cache[i].path);
             return i;
         }
     }
+    printf("[FindInCache] NENALEZENO!\n");
     return -1;
 }

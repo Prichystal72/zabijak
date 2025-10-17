@@ -1,5 +1,7 @@
 #include "twincat_tree.h"
+#include "twincat_cache.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -106,117 +108,143 @@ int FindAndExpandPath(HWND listbox, HANDLE hProcess, const char* searchText) {
     
     printf("\n[HLEDANI] Hledam polozku: '%s'\n", searchText);
     printf("========================================\n");
+    fflush(stdout);
     
-    // Zasobnik pro indexy otevrenych slozek (ktere jsme sami otevreli)
-    int openedStack[100];
-    int stackSize = 0;
-    int previousLevel = -1;
+    // 1. Nacti cache (pouzij malloc pro velke pole)
+    CachedItem* cache = (CachedItem*)malloc(MAX_CACHE_ITEMS * sizeof(CachedItem));
+    if (!cache) {
+        printf("[X] Nelze alokovat pamet pro cache!\n");
+        return -1;
+    }
     
-    int maxIterations = 1000;  // Ochrana proti nekonecne smycce
-    int iteration = 0;
+    printf("[DEBUG] Pokus o nacteni cache souboru...\n");
+    fflush(stdout);
+    int cacheSize = LoadCacheFromFile("twincat_tree_cache.json", cache, MAX_CACHE_ITEMS);
+    printf("[DEBUG] LoadCacheFromFile vratil: %d\n", cacheSize);
+    fflush(stdout);
     
-    while (iteration < maxIterations) {
+    if (cacheSize == 0) {
+        printf("[!] Cache neexistuje, pouzivam fallback (plne expandovani)\n");
+        free(cache);
+        // TODO: Fallback na stary zpusob
+        return -1;
+    }
+    
+    printf("[OK] Cache nactena (%d polozek)\n", cacheSize);
+    
+    // 2. Najdi polozku v cache
+    int cacheIndex = FindInCache(cache, cacheSize, searchText);
+    if (cacheIndex < 0) {
+        printf("[X] Polozka '%s' nenalezena v cache!\n", searchText);
+        free(cache);
+        return -1;
+    }
+    
+    printf("[OK] Polozka nalezena v cache:\n");
+    printf("     Cesta: %s\n", cache[cacheIndex].path);
+    printf("     Level: %d\n", cache[cacheIndex].level);
+    
+    // 3. Parsuj cestu (napr. "POUs/Stations/ST_00/ST00_PRGs/ST00_CallPRGs")
+    char pathCopy[1024];
+    strcpy(pathCopy, cache[cacheIndex].path);
+    
+    char* pathParts[20];
+    int pathCount = 0;
+    
+    char* token = strtok(pathCopy, "/");
+    while (token && pathCount < 20) {
+        pathParts[pathCount++] = token;
+        token = strtok(NULL, "/");
+    }
+    
+    printf("[OK] Cesta rozdelena na %d casti\n", pathCount);
+    for (int i = 0; i < pathCount; i++) {
+        printf("     [%d] %s\n", i, pathParts[i]);
+    }
+    
+    // 4. Postupne otviraj slozky v ceste (krome posledni = samotna polozka)
+    printf("\n[EXPANDOVANI] Oteviram slozky v ceste...\n");
+    
+    for (int partIdx = 0; partIdx < pathCount - 1; partIdx++) {
+        const char* folderName = pathParts[partIdx];
+        int targetLevel = partIdx;  // Level odpovida pozici v ceste
+        
+        printf("\n[%d/%d] Hledam slozku '%s' na levelu %d...\n", 
+               partIdx + 1, pathCount - 1, folderName, targetLevel);
+        
+        // Najdi slozku v aktualnim stavu ListBoxu
         int itemCount = GetListBoxItemCount(listbox);
-        if (itemCount <= 0) {
-            printf("[X] Prazdny ListBox!\n");
-            return -1;
-        }
-        
-        printf("\n[Iterace %d] Celkem polozek: %d, Stack size: %d\n", 
-               iteration, itemCount, stackSize);
-        
-        bool foundNewFolder = false;
+        int foundIndex = -1;
         
         for (int i = 0; i < itemCount; i++) {
             TreeItem item;
-            if (!ExtractTreeItem(hProcess, listbox, i, &item)) {
-                continue;
-            }
-            
-            // Debug output - pouze pro CLOSED a OPEN, ne LEAF
-            int folderState = GetFolderState(listbox, hProcess, i);
-            
-            // Detekce poklesu levelu -> zavri stack
-            if (previousLevel >= 0 && item.position < previousLevel) {
-                // Zavri slozky ze stacku, ktere patri k vyssimu levelu
-                while (stackSize > 0) {
-                    int topIndex = openedStack[stackSize - 1];
-                    TreeItem topItem;
-                    if (ExtractTreeItem(hProcess, listbox, topIndex, &topItem)) {
-                        if (topItem.position >= item.position) {
-                            ToggleListBoxItem(listbox, topIndex);
-                            stackSize--;
-                            Sleep(50);
-                        } else {
-                            break;
-                        }
-                    } else {
-                        stackSize--;
-                    }
+            if (ExtractTreeItem(hProcess, listbox, i, &item)) {
+                if (item.position == targetLevel && _stricmp(item.text, folderName) == 0) {
+                    foundIndex = i;
+                    break;
                 }
             }
-            
-            // Nasli jsme hledanou polozku?
-            if (_stricmp(item.text, searchText) == 0) {
-                printf("\n[OK] NALEZENO! Index: %d, Level: %d, Text: '%s'\n", 
-                       i, item.position, item.text);
-                return i;
-            }
-            
-            // Zkus otevrit polozku, pokud neni uz otevrena
-            bool shouldTryOpen = false;
-            
-            if (item.hasChildren && folderState == 0) {
-                shouldTryOpen = true;
-            } else if (!item.hasChildren && folderState == 0) {
-                shouldTryOpen = true;
-            }
-            
-            if (shouldTryOpen) {
-                int countBefore = itemCount;
-                ToggleListBoxItem(listbox, i);
-                Sleep(100);
-                
-                // Zrus selection (aby nezustal modry след)
-                SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
-                
-                int countAfter = GetListBoxItemCount(listbox);
-                
-                if (countAfter > countBefore) {
-                    // Otevreli jsme slozku, pridej na stack
-                    openedStack[stackSize++] = i;
-                    foundNewFolder = true;
-                    printf("  [%d] '%s' otevreno (+%d polozek)\n", i, item.text, countAfter - countBefore);
-                    break;
-                } else if (countAfter < countBefore) {
-                    // Omylem jsme zavreli slozku, vratime zpet
-                    ToggleListBoxItem(listbox, i);
-                    Sleep(100);
-                } 
-                // Jinak to neni slozka, pokracujeme
-            }
-            
-            previousLevel = item.position;
         }
         
-        // Pokud jsme v teto iteraci neotrevreli zadnou novou slozku, 
-        // prohledali jsme vse
-        if (!foundNewFolder) {
-            printf("\n[X] Polozka '%s' nenalezena\n", searchText);
-            
-            // Zavri vsechny otevrene slozky
-            while (stackSize > 0) {
-                int idx = openedStack[--stackSize];
-                ToggleListBoxItem(listbox, idx);
-                Sleep(50);
-            }
-            
+        if (foundIndex < 0) {
+            printf("[X] Slozka '%s' nenalezena na levelu %d!\n", folderName, targetLevel);
             return -1;
         }
         
-        iteration++;
+        printf("[OK] Slozka '%s' nalezena na indexu %d\n", folderName, foundIndex);
+        
+        // Zkontroluj, jestli neni uz otevrena
+        int folderState = GetFolderState(listbox, hProcess, foundIndex);
+        
+        if (folderState == 0) {  // CLOSED
+            printf("     -> Oteviram slozku...\n");
+            ToggleListBoxItem(listbox, foundIndex);
+            Sleep(100);
+            
+            // Zrus selection
+            SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
+        } else {
+            printf("     -> Slozka uz je otevrena\n");
+        }
     }
     
-    printf("[X] Prekrocen limit iteraci!\n");
+    // Klikni na POUs dvakrat pro odznaceni vsech ostatnich polozek
+    int pousIndex = -1;
+    int itemCount = GetListBoxItemCount(listbox);
+    for (int i = 0; i < itemCount; i++) {
+        TreeItem item;
+        if (ExtractTreeItem(hProcess, listbox, i, &item)) {
+            if (item.position == 0 && _stricmp(item.text, "POUs") == 0) {
+                pousIndex = i;
+                break;
+            }
+        }
+    }
+    
+    if (pousIndex >= 0) {
+        // Klikni dvakrat pomoci ToggleListBoxItem
+        ToggleListBoxItem(listbox, pousIndex);
+        Sleep(50);
+        ToggleListBoxItem(listbox, pousIndex);
+        Sleep(50);
+    }
+    
+    // 5. Najdi finalni polozku
+    printf("\n[FINALIZACE] Hledam cilovou polozku '%s'...\n", searchText);
+    
+    itemCount = GetListBoxItemCount(listbox);
+    for (int i = 0; i < itemCount; i++) {
+        TreeItem item;
+        if (ExtractTreeItem(hProcess, listbox, i, &item)) {
+            if (_stricmp(item.text, searchText) == 0) {
+                printf("\n[OK] NALEZENO! Index: %d, Level: %d\n", i, item.position);
+                free(cache);
+                return i;
+            }
+        }
+    }
+    
+    printf("[X] Polozka nenalezena v expandovanem stromu!\n");
+    free(cache);
     return -1;
 }

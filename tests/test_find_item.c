@@ -31,7 +31,7 @@ int main() {
     }
 
     // Hledana polozka
-    const char* searchText = "ST03_Init_AbholPos";
+    const char* searchText = "DT_TO_SPECIALSTRING";
     
     printf("\nHledam polozku: %s\n", searchText);
     
