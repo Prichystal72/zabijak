@@ -1,76 +1,58 @@
 #include <windows.h>
 #include <stdio.h>
 #include "../lib/twincat_navigator.h"
+#include "../lib/twincat_tree.h"
 
 /**
  * Test: Zobrazeni VSECH polozek v ListBoxu s detaily
+ * Pouziva knihovnu twincat_tree.c pro praci se seznamem polozek
  */
 
 int main() {
     printf("===================================================\n");
     printf("  ZOBRAZENI VSECH POLOZEK V LISTBOXU\n");
     printf("===================================================\n\n");
-    
+
     HWND twincatWindow = FindTwinCatWindow();
     if (!twincatWindow) {
         printf("[X] TwinCAT okno nenalezeno!\n");
         return 1;
     }
-    
+
     HWND listbox = FindProjectListBox(twincatWindow);
     if (!listbox) {
         printf("[X] ListBox nenalezen!\n");
         return 1;
     }
-    
+
     HANDLE hProcess = OpenTwinCatProcess(listbox);
     if (!hProcess) {
         printf("[X] Nelze otevrit proces!\n");
         return 1;
     }
+
+    // Ziskej vsechny polozky pomoci nove knihovny
+    TreeItem items[1000];
+    int count = GetAllVisibleItems(listbox, hProcess, items, 1000);
     
-    int itemCount = GetListBoxItemCount(listbox);
-    printf("Celkem polozek v ListBoxu: %d\n\n", itemCount);
-    
+    printf("Celkem polozek v ListBoxu: %d\n\n", count);
+
     // Zobraz vsechny polozky
-    printf("===================================================\n");
-    printf("IDX | LEVEL | FLAGS    | TEXT\n");
-    printf("===================================================\n");
+    PrintTreeStructure(items, count);
     
-    for (int i = 0; i < itemCount; i++) {
-        TreeItem item;
-        if (ExtractTreeItem(hProcess, listbox, i, &item)) {
-            // Zjisti skutecny level (z position)
-            int realLevel = item.position;
-            
-            printf("[%2d] | L%d    | 0x%06X | %s\n", 
-                   i, realLevel, item.flags, item.text);
-        } else {
-            printf("[%2d] | ???   | ???????? | <nelze nacist>\n", i);
-        }
-    }
-    
-    printf("===================================================\n\n");
+    printf("\n");
     
     // Statistika podle levelu
     printf("STATISTIKA PODLE LEVELU:\n");
-    int levelCount[10] = {0};
-    
-    for (int i = 0; i < itemCount; i++) {
-        TreeItem item;
-        if (ExtractTreeItem(hProcess, listbox, i, &item)) {
-            if (item.position < 10) {
-                levelCount[item.position]++;
-            }
-        }
-    }
+    int levelCounts[10];
+    GetLevelStatistics(items, count, levelCounts);
     
     for (int i = 0; i < 10; i++) {
-        if (levelCount[i] > 0) {
-            printf("  Level %d: %d polozek\n", i, levelCount[i]);
+        if (levelCounts[i] > 0) {
+            printf("  Level %d: %d polozek\n", i, levelCounts[i]);
         }
     }
-    
+
     CloseHandle(hProcess);
     return 0;
 }

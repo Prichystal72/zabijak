@@ -1,10 +1,91 @@
 # TwinCAT Navigator Library
 
-**Verze:** 3.0.0-stable  
-**Datum:** 6. října 2025  
-**Status:** ✅ Funkční knihovna pro čtení TwinCAT TreeView
+**Verze:** 3.1.0-stable  
+**Datum:** 17. října 2025  
+**Status:** ✅ Funkční knihovna s cache systémem
 
 Knihovna pro automatickou navigaci a čtení struktury TwinCAT PLC projektů přímo z paměti.
+
+---
+
+## 🎉 Nové funkce (v3.1)
+
+### ✅ Zobrazení aktuálního stavu projektu
+**Test:** `test_show_all.exe`
+
+Zobrazí všechny aktuálně viditelné položky v TwinCAT Project Explorer:
+- Vypíše index, úroveň zanoření (level), text a stav složky (otevřená/zavřená)
+- Umožňuje rychlou inspekci aktuální struktury projektu
+- Užitečné pro debugging a kontrolu stavu projektu
+
+**Příklad výstupu:**
+```
+[0] (L0) POUs                    [folder: open]
+[1] (L1)   pBasic                [folder: closed]
+[2] (L1)   Stations              [folder: open]
+[3] (L2)     ST_00               [folder: open]
+...
+```
+
+### ✅ Export celé struktury do JSON souboru
+**Test:** `test_tree_cache.exe`  
+**Knihovna:** `lib/twincat_cache.c/.h`
+
+Automaticky expanduje všechny složky v projektu, načte celou strukturu a uloží ji do JSON souboru:
+
+**Funkce:**
+1. **Expandování všech složek** (`ExpandAllFoldersWrapper`)
+   - Inteligentní iterativní otevírání až 100 iterací
+   - Automatická detekce, kdy jsou všechny složky otevřené
+   - Sleep(1ms) pro stabilitu
+
+2. **Načtení celého stromu** (`LoadFullTree`)
+   - Čtení všech položek z plně expandovaného projektu
+   - Sestavení kompletních cest (POUs/Stations/ST_00/...)
+   - Uložení úrovně, textu, stavu a flags pro každou položku
+
+3. **Optimalizované zavírání** (`CollapseAllFoldersFromCache`)
+   - Zavírá složky od nejvyššího levelu k L1
+   - Dynamické vyhledávání položek (indexy se mění při zavírání)
+   - Cílí pouze složky, přeskakuje listy
+   - Dramaticky rychlejší než původní metoda
+
+4. **JSON export** (`SaveCacheToFile`)
+   - Timestamp vytvoření
+   - Kompletní metadata (index, text, level, path, hasChildren, flags)
+   - Čitelný formát pro další zpracování
+
+**Výstupní soubor:** `twincat_tree_cache.json` (300+ položek)
+
+**Příklad JSON struktury:**
+```json
+{
+  "project": "POUs",
+  "timestamp": "2025-10-17T10:46:37",
+  "itemCount": 300,
+  "items": [
+    {
+      "index": 0,
+      "text": "POUs",
+      "level": 0,
+      "path": "POUs",
+      "hasChildren": true,
+      "flags": "0x1404C5"
+    },
+    {
+      "index": 1,
+      "text": "pBasic",
+      "level": 1,
+      "path": "POUs/pBasic",
+      "hasChildren": true,
+      "flags": "0x1404C5"
+    }
+    ...
+  ]
+}
+```
+
+---
 
 ## 🎯 Účel
 
@@ -17,7 +98,7 @@ Navigator Library poskytuje robustní nástroje pro práci s TwinCAT projekty:
 - ✅ **Export & Compare** - Srovnání file struktury vs aktuální stav
 - ⚠️ **Memory reading** - ExtractTreeItem() debugging v průběhu
 
-## 📁 Struktura projektu (v3.0)
+## 📁 Struktura projektu (v3.1)
 
 
 📦 twincat-navigator/
@@ -31,10 +112,21 @@ Navigator Library poskytuje robustní nástroje pro práci s TwinCAT projekty:
 │   │   ├── GetFolderState()         # Stav složky (structure[3]: 0/1)
 │   │   ├── IsItemExpanded()         # Stav složky (level comparison)
 │   │   ├── ToggleListBoxItem()      # Otevře/zavře složku
+│   │   ├── CollapseAllFolders()     # Zavře všechny složky (starší metoda)
+│   │   ├── ExpandAllFolders()       # Otevře všechny složky (starší metoda)
 │   │   └── PrintTreeStructure()     # Zobrazí strom
+│   ├── lib/twincat_cache.c/.h       # 🆕 Cache systém pro práci se strukturou
+│   │   ├── GetProjectName()         # Získá název projektu
+│   │   ├── ExpandAllFoldersWrapper()# Inteligentní expandování (až 100 iterací)
+│   │   ├── LoadFullTree()           # Načte celý strom do cache
+│   │   ├── SaveCacheToFile()        # Export do JSON souboru
+│   │   ├── LoadCacheFromFile()      # Import z JSON souboru
+│   │   ├── FindInCache()            # Vyhledání v cache podle textu
+│   │   └── CollapseAllFoldersFromCache() # Optimalizované zavírání pomocí cache
 │   └── lib/twincat_search.c/.h      # Vyhledávací funkce (placeholder)
 ├── 🧪 TESTY (VŠECHNY FUNKČNÍ)
 │   ├── test_show_all.exe            # ✅ Zobrazí všechny položky v ListBoxu
+│   ├── test_tree_cache.exe          # ✅ 🆕 Export celé struktury do JSON
 │   ├── test_basic_functions.exe     # ✅ Testy 5 základních funkcí
 │   ├── test_folder_state.exe        # ✅ Porovnání IsItemExpanded vs GetFolderState
 │   ├── test_simple_toggle.exe       # ✅ Test otevírání/zavírání složky
@@ -54,11 +146,14 @@ Navigator Library poskytuje robustní nástroje pro práci s TwinCAT projekty:
 
 ## 🔧 Kompilace
 
-### 🚀 Kompilace testů:
+### 🚀 Kompilace nových testů:
 ```bash
 cd tests
+# Zobrazení aktuálního stavu
 gcc -o test_show_all.exe test_show_all.c ../lib/twincat_navigator.c -luser32 -lpsapi -I..
-gcc -o test_folder_state.exe test_folder_state.c ../lib/twincat_navigator.c -luser32 -lpsapi -I..
+
+# Export celé struktury do JSON
+gcc -o test_tree_cache.exe test_tree_cache.c ../lib/twincat_navigator.c ../lib/twincat_cache.c -luser32 -lpsapi -I..
 ```
 
 ### 📝 Rychlé spuštění testů:
@@ -66,6 +161,12 @@ gcc -o test_folder_state.exe test_folder_state.c ../lib/twincat_navigator.c -lus
 **1. Zobrazit všechny položky:**
 ```powershell
 cd tests ; .\test_show_all.exe
+```
+
+**2. Export celé struktury do JSON:**
+```powershell
+cd tests ; .\test_tree_cache.exe
+# Vytvoří soubor: twincat_tree_cache.json
 ```
 
 **2. Test detekce stavu složek:**
