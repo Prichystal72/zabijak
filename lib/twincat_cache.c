@@ -5,6 +5,32 @@
 #include <string.h>
 #include <time.h>
 
+// Pomocna funkce: Klikne mysi na konkretni polozku ListBoxu
+void ClickListBoxItem(HWND listbox, int itemIndex) {
+    RECT rect;
+    GetWindowRect(listbox, &rect);
+    
+    // Vypocti vysku jedne polozky (predpokladame ~16 pixelu)
+    int itemHeight = 16;
+    int clickX = rect.left + 10;
+    int clickY = rect.top + 10 + (itemIndex * itemHeight);
+    
+    // Uloz aktualni pozici mysi
+    POINT oldPos;
+    GetCursorPos(&oldPos);
+    
+    // Presun mysi a klikni
+    SetCursorPos(clickX, clickY);
+    Sleep(50);
+    mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+    Sleep(10);
+    mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+    Sleep(50);
+    
+    // Vrat mysi zpet
+    SetCursorPos(oldPos.x, oldPos.y);
+}
+
 // Pomocna funkce: Zjisti nazev projektu z prvni polozky
 void GetProjectName(HWND listbox, HANDLE hProcess, char* projectName, int maxLen) {
     TreeItem item;
@@ -20,6 +46,11 @@ void GetProjectName(HWND listbox, HANDLE hProcess, char* projectName, int maxLen
 int ExpandAllFoldersWrapper(HWND listbox, HANDLE hProcess) {
     printf("\n[EXPANDALL] Oteviram vsechny slozky...\n");
     
+    // Fyzicke kliknuti mysi na prvni polozku (inicializace focusu)
+    printf("Inicializuji focus kliknutim na prvni polozku...\n");
+    ClickListBoxItem(listbox, 0);
+    printf("[OK] Focus inicializovan!\n");
+    
     int iteration = 0;
     int maxIterations = 100;
     
@@ -27,7 +58,7 @@ int ExpandAllFoldersWrapper(HWND listbox, HANDLE hProcess) {
         int itemCount = GetListBoxItemCount(listbox);
         bool foundClosed = false;
         
-        printf("  [Iterace %d] Polozek: %d\n", iteration, itemCount);
+        //printf("  [Iterace %d] Polozek: %d\n", iteration, itemCount);
         
         for (int i = 0; i < itemCount; i++) {
             TreeItem item;
@@ -48,7 +79,7 @@ int ExpandAllFoldersWrapper(HWND listbox, HANDLE hProcess) {
                 
                 int countAfter = GetListBoxItemCount(listbox);
                 if (countAfter > countBefore) {
-                    printf("    [%d] '%s' otevreno (+%d)\n", i, item.text, countAfter - countBefore);
+                    //printf("    [%d] '%s' otevreno (+%d)\n", i, item.text, countAfter - countBefore);
                     foundClosed = true;
                     break; // Restart iterace
                 }
@@ -124,11 +155,11 @@ void CollapseAllFoldersFromCache(HWND listbox, HANDLE hProcess, CachedItem* cach
         }
     }
     
-    printf("  Nejvyssi level: %d\n", maxLevel);
+    //printf("  Nejvyssi level: %d\n", maxLevel);
     
     // Zavri slozky od nejvyssiho levelu k L1
     for (int level = maxLevel; level >= 1; level--) {
-        printf("  Zaviram level %d...\n", level);
+        //printf("  Zaviram level %d...\n", level);
         int closedCount = 0;
         
         for (int i = count - 1; i >= 0; i--) {  // Odzadu!
@@ -155,10 +186,10 @@ void CollapseAllFoldersFromCache(HWND listbox, HANDLE hProcess, CachedItem* cach
                 int folderState = GetFolderState(listbox, hProcess, actualIndex);
                 
                 if (folderState == 1) {  // Otevrena
-                    printf("    [cache:%d -> listbox:%d] '%s' (L%d): Zaviram...\n", 
-                           i, actualIndex, cache[i].text, cache[i].level);
+                    //printf("    [cache:%d -> listbox:%d] '%s' (L%d): Zaviram...\n", 
+                       //    i, actualIndex, cache[i].text, cache[i].level);
                     ToggleListBoxItem(listbox, actualIndex);
-                    Sleep(1);
+                    Sleep(1);     // ToDo upravit zpět na 1 ms
                     SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
                     closedCount++;
                 }
@@ -170,20 +201,10 @@ void CollapseAllFoldersFromCache(HWND listbox, HANDLE hProcess, CachedItem* cach
     // Dvojite kliknuti na POUs pro vymazani modreho zvyrazneni
     printf("  Odstranuji modre zvyrazneni (dvojite kliknuti na POUs)...\n");
     SetFocus(listbox);
-    Sleep(100);
+    Sleep(1);
     
-    // Prvni kliknuti - otevre POUs
-    SendMessage(listbox, LB_SETCURSEL, 0, 0);
-    Sleep(100);
-    PostMessage(listbox, WM_KEYDOWN, VK_RETURN, 0);
-    Sleep(500);
-    
-    // Druhe kliknuti - zavre POUs
-    SendMessage(listbox, LB_SETCURSEL, 0, 0);
-    Sleep(100);
-    PostMessage(listbox, WM_KEYDOWN, VK_RETURN, 0);
-    Sleep(500);
-    
+    // Prvni kliknuti 
+    ClickListBoxItem(listbox, 0);
     printf("[OK] Slozky zavreny!\n");
 }
 

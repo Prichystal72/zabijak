@@ -59,7 +59,7 @@ int main() {
         // Cache neexistuje -> vytvorime ho
         printf("\n=== VYTVARENI CACHE ===\n");
         
-        // Expandni vsechny slozky
+        // Expandni vsechny slozky (inicializace focusu je uvnitr funkce)
         int expandedCount = ExpandAllFoldersWrapper(listbox, hProcess);
         
         // Nacti cely strom

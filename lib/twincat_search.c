@@ -45,7 +45,7 @@ static bool GetItemInfo(HWND listbox, HANDLE hProcess, int position, ItemInfo* i
     info->flags = structure[2];
     info->text[0] = '\0';
 
-    DWORD textPtr = structure[5];
+    DWORD_PTR textPtr = structure[5];
     if (textPtr > 0x400000 && textPtr < 0x80000000) {
         char textBuffer[256];
         SIZE_T textRead = 0;
@@ -100,7 +100,7 @@ static void ToggleFolder(HWND listbox, int index) {
 }
 
 // Zjistí, zda je položka expandovaná
-static bool IsItemExpanded(HWND listbox, HANDLE hProcess, int index, int level) {
+static bool IsItemExpandedAtLevel(HWND listbox, HANDLE hProcess, int index, int level) {
     int count = SendMessage(listbox, LB_GETCOUNT, 0, 0);
     if (index + 1 >= count) return false;
 
@@ -171,7 +171,7 @@ static bool TraverseChildren(SearchContext* ctx, int startIndex, int parentLevel
         bool isFolder = info.hasChildren || info.flags == FLAG_FOLDER;
 
         if (isFolder) {
-            bool expandedBefore = IsItemExpanded(ctx->hListBox, ctx->hProcess, index, info.level);
+            bool expandedBefore = IsItemExpandedAtLevel(ctx->hListBox, ctx->hProcess, index, info.level);
 
             // Otevři složku, pokud ještě není otevřená
             if (!expandedBefore) {
@@ -214,7 +214,7 @@ static int EnsureRootPrepared(HWND listbox, HANDLE hProcess) {
         return SEARCH_ROOT_ERROR;
     }
 
-    if (!IsItemExpanded(listbox, hProcess, 0, rootInfo.level)) {
+    if (!IsItemExpandedAtLevel(listbox, hProcess, 0, rootInfo.level)) {
         return SEARCH_ROOT_ERROR;
     }
 

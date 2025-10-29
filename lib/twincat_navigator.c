@@ -454,7 +454,7 @@ bool AnalyzeFullMemoryStructure(HANDLE hProcess, const char* outputFileName) {
         if (bytesRead < 24) continue;
         
         // Text pointer je na offsetu 20 (index 5)
-        DWORD textPtr = structure[5];
+        DWORD_PTR textPtr = structure[5];
         
         if (textPtr > 0x400000 && textPtr < 0x80000000) {
             char textBuffer[512];
@@ -583,9 +583,9 @@ bool SearchCompleteProjectStructure(HANDLE hProcess, const char* outputFileName)
                             // Zapiš jen validní ST_ názvy (min 4 znaky)
                             if (textLen >= 4) {
                                 textBuffer[textLen] = '\0';
-                                DWORD address = (DWORD)((LPBYTE)mbi.BaseAddress + i);
+                                DWORD_PTR address = (DWORD_PTR)((LPBYTE)mbi.BaseAddress + i);
                                 
-                                fprintf(file, "[%08lX] %s\n", address, textBuffer);
+                                fprintf(file, "[%08llX] %s\n", (unsigned long long)address, textBuffer);
                                 foundItems++;
                                 
                                 // Zvýrazni target
@@ -660,7 +660,7 @@ bool SearchInMemoryDump(HANDLE hProcess, const char* searchText, char* outputFil
                     // Hledej target text
                     for (SIZE_T i = 0; i < bytesRead - strlen(searchText); i++) {
                         if (memcmp(buffer + i, searchText, strlen(searchText)) == 0) {
-                            DWORD address = (DWORD)((LPBYTE)mbi.BaseAddress + i);
+                            DWORD_PTR address = (DWORD_PTR)((LPBYTE)mbi.BaseAddress + i);
                             
                             // Extrahuj kontext okolo nálezu
                             char context[512] = {0};
@@ -748,7 +748,7 @@ int ExtractAllItemsFromMemory(HANDLE hProcess, TreeItem* items, int maxItems) {
                                 
                                 item->index = itemCount;
                                 strncpy(item->text, text, MAX_TEXT_LENGTH - 1);
-                                item->textPtr = (DWORD)((LPBYTE)mbi.BaseAddress + i);
+                                item->textPtr = (DWORD_PTR)((LPBYTE)mbi.BaseAddress + i);
                                 item->type = "MEMORY";
                                 item->icon = "🧠";
                                 
@@ -766,4 +766,73 @@ int ExtractAllItemsFromMemory(HANDLE hProcess, TreeItem* items, int maxItems) {
     
     printf("🧠 Z paměti extrahováno: %d ST_ položek\n", itemCount);
     return itemCount;
+}
+
+// Extrahuje název cílového souboru/programu z titulku TwinCAT okna
+// Příklady:
+//   "TwinCAT PLC Control - [CELA.pro - POUs]" -> "CELA"
+//   "TwinCAT PLC Control - [ST00_PRG.EXP]" -> "ST00_PRG"
+//   "TwinCAT PLC Control - [Stations\ST_00\ST00_PRGs\ST00_CallPRGs.EXP]" -> "ST00_CallPRGs"
+bool ExtractTargetFromTitle(const char* windowTitle, char* targetText, int maxLength) {
+    if (!windowTitle || !targetText || maxLength < 1) {
+        return false;
+    }
+    
+    targetText[0] = '\0';
+    
+    // Najdi text mezi '[' a ']'
+    const char* start = strchr(windowTitle, '[');
+    const char* end = strchr(windowTitle, ']');
+    
+    if (!start || !end || end <= start) {
+        return false;
+    }
+    
+    start++; // Přeskoč '['
+    
+    // Zkopíruj text mezi závorkami
+    char buffer[512];
+    int len = (int)(end - start);
+    if (len >= sizeof(buffer)) {
+        len = sizeof(buffer) - 1;
+    }
+    strncpy(buffer, start, len);
+    buffer[len] = '\0';
+    
+    // Najdi poslední '\' nebo '/' (pro cestu k souboru)
+    char* lastSlash = strrchr(buffer, '\\');
+    if (!lastSlash) {
+        lastSlash = strrchr(buffer, '/');
+    }
+    
+    // Pokud je cesta, vezmi jen koncový název souboru
+    char* fileName = lastSlash ? (lastSlash + 1) : buffer;
+    
+    // Odstraň příponu (.pro, .EXP, atd.)
+    char* dot = strchr(fileName, '.');
+    if (dot) {
+        *dot = '\0';
+    }
+    
+    // Odstraň suffix po " - " (např. "CELA.pro - POUs" -> "CELA")
+    char* dash = strstr(fileName, " - ");
+    if (dash) {
+        *dash = '\0';
+    }
+    
+    // Odstraň typ v závorkách (např. "MachineStates (PRG-ST)" -> "MachineStates")
+    char* bracket = strchr(fileName, '(');
+    if (bracket) {
+        // Odstraň i případné mezery před závorkou
+        while (bracket > fileName && *(bracket - 1) == ' ') {
+            bracket--;
+        }
+        *bracket = '\0';
+    }
+    
+    // Zkopíruj výsledek
+    strncpy(targetText, fileName, maxLength - 1);
+    targetText[maxLength - 1] = '\0';
+    
+    return (targetText[0] != '\0');
 }

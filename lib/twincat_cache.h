@@ -17,6 +17,7 @@ typedef struct {
 
 // Pomocne funkce
 void GetProjectName(HWND listbox, HANDLE hProcess, char* projectName, int maxLen);
+void ClickListBoxItem(HWND listbox, int itemIndex);
 
 // Expandovani a nacteni stromu
 int ExpandAllFoldersWrapper(HWND listbox, HANDLE hProcess);
