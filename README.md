@@ -1,53 +1,193 @@
-# TwinCAT Navigator Library
+# TC2 Navigator - Globální navigátor pro TwinCAT 2
 
-**Verze:** 3.1.0-stable  
-**Datum:** 17. října 2025  
-**Status:** ✅ Funkční knihovna s cache systémem
+**Verze:** 4.0  
+**Datum:** 30. října 2025  
+**Status:** ✅ Funkční aplikace s globální klávesovou zkratkou
 
-Knihovna pro automatickou navigaci a čtení struktury TwinCAT PLC projektů přímo z paměti.
+Aplikace pro automatickou navigaci v TwinCAT 2 Project Explorer pomocí globální klávesové zkratky.
 
 ---
 
-## 🎉 Nové funkce (v3.1)
+## 🚀 Rychlý start
 
-### ✅ Zobrazení aktuálního stavu projektu
-**Test:** `test_show_all.exe`
-
-Zobrazí všechny aktuálně viditelné položky v TwinCAT Project Explorer:
-- Vypíše index, úroveň zanoření (level), text a stav složky (otevřená/zavřená)
-- Umožňuje rychlou inspekci aktuální struktury projektu
-- Užitečné pro debugging a kontrolu stavu projektu
-
-**Příklad výstupu:**
-```
-[0] (L0) POUs                    [folder: open]
-[1] (L1)   pBasic                [folder: closed]
-[2] (L1)   Stations              [folder: open]
-[3] (L2)     ST_00               [folder: open]
-...
+### 1. Kompilace
+```bash
+gcc -o TC2_navigator.exe TC2_navigator.c ^
+    lib/twincat_navigator.c lib/twincat_tree.c ^
+    lib/twincat_cache.c lib/twincat_search.c ^
+    -luser32 -lpsapi -lcomctl32
 ```
 
-### ✅ Export celé struktury do JSON souboru
-**Test:** `test_tree_cache.exe`  
-**Knihovna:** `lib/twincat_cache.c/.h`
+### 2. Spuštění
+```bash
+TC2_navigator.exe
+```
 
-Automaticky expanduje všechny složky v projektu, načte celou strukturu a uloží ji do JSON souboru:
+Aplikace běží na pozadí a zachytává globální klávesové zkratky.
 
-**Funkce:**
-1. **Expandování všech složek** (`ExpandAllFoldersWrapper`)
-   - Inteligentní iterativní otevírání až 100 iterací
-   - Automatická detekce, kdy jsou všechny složky otevřené
-   - Sleep(1ms) pro stabilitu
+### 3. Použití
 
-2. **Načtení celého stromu** (`LoadFullTree`)
-   - Čtení všech položek z plně expandovaného projektu
-   - Sestavení kompletních cest (POUs/Stations/ST_00/...)
-   - Uložení úrovně, textu, stavu a flags pro každou položku
+1. **Otevři TwinCAT 2 projekt** (System Manager nebo PLC Control)
+2. **Otevři POU/funkci** (například MAIN nebo ST_Funkce) - titulek okna se změní na "MAIN (PRG) - TwinCAT..."
+3. **Stiskni `Ctrl+Shift+A`** - aplikace automaticky:
+   - Extrahuje název POU z titulku okna
+   - Najde ho v Project Explorer
+   - Expanduje cestu
+   - Klikne na položku a otevře ji
 
-3. **Optimalizované zavírání** (`CollapseAllFoldersFromCache`)
-   - Zavírá složky od nejvyššího levelu k L1
-   - Dynamické vyhledávání položek (indexy se mění při zavírání)
-   - Cílí pouze složky, přeskakuje listy
+### 4. Klávesové zkratky
+
+- **`Ctrl+Shift+A`** - Navigovat na aktuální POU (podle titulku okna)
+- **`Ctrl+Alt+ESC`** - Ukončit aplikaci
+
+---
+
+## 📖 Jak to funguje
+
+### První spuštění (vytvoření cache)
+1. Aplikace najde TwinCAT okno a ListBox s project stromem
+2. Expanduje všechny složky v projektu
+3. Načte celou strukturu do paměti (všechny POU, GVL, složky)
+4. Uloží do `twincat_tree_cache.json`
+5. Zavře všechny složky zpět
+
+**Trvá:** ~5-100 sekund (závisí na velikosti projektu)
+
+### Další spuštění (rychlá navigace)
+1. Načte cache z JSON souboru (rychlé, bez expandování)
+2. Po stisku `Ctrl+Shift+A`:
+   - Extrahuje název z titulku (např. "MAIN (PRG)" → "MAIN")
+   - Najde položku v cache
+   - Parsuje cestu (např. "POUs/MAIN")
+   - Postupně expanduje složky v cestě
+   - Klikne na cílovou položku
+
+**Trvá:** <1 sekunda
+
+---
+
+## 🔧 Jak funguje cache systém
+
+### Struktura cache (JSON)
+```json
+{
+  "project": "POUs",
+  "timestamp": "2025-10-30T07:44:46",
+  "itemCount": 300,
+  "items": [
+    {
+      "index": 0,
+      "text": "POUs",
+      "level": 0,
+      "path": "POUs",
+      "hasChildren": 1,
+      "flags": 3605757
+    },
+    {
+      "index": 15,
+      "text": "MAIN",
+      "level": 2,
+      "path": "POUs/MAIN",
+      "hasChildren": 0,
+      "flags": 459005
+    }
+  ]
+}
+```
+
+### Kdy smazat cache?
+Cache je potřeba přegenerovat pokud:
+- Přidáš/odstraníš POU v projektu
+- Přejmenujete složky nebo POU
+- Změníš strukturu projektu
+
+**Řešení:** Smaž `twincat_tree_cache.json` a restartuj `TC2_navigator.exe`
+
+---
+
+## 📚 Architektura
+
+### Hlavní soubory
+
+**TC2_navigator.c** - Hlavní aplikace
+- Globální keyboard hook (WH_KEYBOARD_LL)
+- Zachytává Ctrl+Shift+A
+- Volá navigační funkce
+
+**lib/twincat_navigator.c** - Základní funkce
+- `FindTwinCatWindow()` - Najde TwinCAT okno
+- `FindProjectListBox()` - Najde ListBox s projektem (scoring algoritmus)
+- `ExtractTreeItem()` - Čte paměť TwinCAT a extrahuje TreeItem
+
+**lib/twincat_cache.c** - Cache systém
+- `ExpandAllFoldersWrapper()` - Expanduje všechny složky
+- `LoadFullTree()` - Načte celý strom
+- `SaveCacheToFile()` - Uloží do JSON
+- `LoadCacheFromFile()` - Načte z JSON
+
+**lib/twincat_tree.c** - Navigace
+- `FindAndExpandPath()` - Najde a expanduje cestu k položce
+
+**lib/twincat_search.c** - Extrakce názvu
+- `ExtractTargetFromTitle()` - Parsuje titulek okna
+
+---
+
+## 🛠️ Testovací utility
+
+### test_tree_cache.exe
+Vytvoří/obnoví cache soubor ručně
+```bash
+cd tests
+test_tree_cache.exe
+```
+
+### test_find_item.exe
+Testuje vyhledání konkrétní položky
+```bash
+test_find_item.exe "MAIN"
+```
+
+### test_hook_simple.exe
+Testuje keyboard hook (bez TwinCAT navigace)
+```bash
+test_hook_simple.exe
+```
+
+---
+
+## ⚙️ Technické detaily
+
+### Jak funguje čtení paměti TwinCAT?
+1. `FindProjectListBox()` najde ListBox kontrolu
+2. `SendMessage(LB_GETITEMDATA)` získá pointer na ItemData strukturu
+3. `ReadProcessMemory()` čte strukturu z paměti TwinCAT procesu
+4. Struktura obsahuje: level [1], flags [2], hasChildren [3], textPtr [5]
+
+### Scoring algoritmus pro hledání ListBoxu
+```c
+int score = itemCount + height / 10;
+if (rect.left < windowWidth / 3) score += 100; // Levá pozice
+```
+
+Preferuje:
+- Levou pozici v okně (+100 bodů)
+- Vysoký ListBox (+height/10)
+- Hodně položek (+itemCount)
+
+---
+
+## 🐛 Známé problémy
+
+### LoadCacheFromFile počítá o 1 více
+Parser počítá každý `}` jako konec položky, včetně závěrečného `}` pole items.
+→ Vrací 301 místo 300
+
+**Dopad:** Minimální, navigace funguje správně
+
+**Fix:** Změnit parsování na počítání pouze `},` místo všech `}`
+
+---
    - Dramaticky rychlejší než původní metoda
    - **Automatické odstranění modrého zvýraznění** - dvojité kliknutí na POUs na konci
 

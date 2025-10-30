@@ -1,6 +1,17 @@
+/**
+ * twincat_navigator.c - Implementace základních funkcí pro práci s TwinCAT 2
+ * 
+ * Hlavní funkce:
+ * 1. FindTwinCatWindow() - Najde okno obsahující "TwinCAT" v titulku
+ * 2. FindProjectListBox() - Najde ListBox s projektem (scoring: levá pozice +100, výška/10, počet položek)
+ * 3. ExtractTreeItem() - Čte paměť TwinCAT procesu a extrahuje TreeItem strukturu
+ *    - Používá ReadProcessMemory pro čtení ItemData struktury (16 DWORD hodnot)
+ *    - Level je na pozici [1], flags na [2], hasChildren na [3], textPtr na [5]
+ */
+
 #include "twincat_navigator.h"
 
-// Najde TwinCAT okno
+// Najde TwinCAT okno podle textu "TwinCAT" v titulku
 HWND FindTwinCatWindow(void) {
     HWND hWnd = GetTopWindow(GetDesktopWindow());
     
@@ -16,7 +27,8 @@ HWND FindTwinCatWindow(void) {
     return NULL;
 }
 
-// Najde project explorer ListBox
+// Najde project explorer ListBox pomocí scoring algoritmu
+// Preferuje: levou pozici (+100 bodů), vysoký ListBox (+height/10), mnoho položek (+itemCount)
 HWND FindProjectListBox(HWND parentWindow) {
     printf("Hledam project explorer ListBox...\n");
 

@@ -1,3 +1,35 @@
+/**
+ * twincat_cache.c - Implementace cache systému pro TwinCAT projekty
+ * 
+ * Hlavní funkce:
+ * 
+ * 1. ExpandAllFoldersWrapper():
+ *    - Iterativně prochází ListBox a hledá zavřené složky (hasChildren && folderState==0)
+ *    - Expanduje je pomocí ToggleListBoxItem() (double-click simulation)
+ *    - Opakuje dokud jsou nějaké zavřené složky (max 100 iterací)
+ * 
+ * 2. LoadFullTree():
+ *    - Prochází všechny položky v expandovaném ListBoxu
+ *    - Pro každou položku vytváří CachedItem se všemi údaji
+ *    - Sestavuje cestu (path) pomocí zásobníku levelTexts[] (parent1/parent2/item)
+ *    - Vrací počet načtených položek
+ * 
+ * 3. SaveCacheToFile():
+ *    - Zapisuje JSON soubor s metadaty (project, timestamp, itemCount)
+ *    - Pro každou položku zapisuje: index, text, level, path, hasChildren, flags
+ *    - Formát: ručně generovaný JSON (ne pomocí knihovny)
+ * 
+ * 4. LoadCacheFromFile():
+ *    - Ruční parser JSON (ne cJSON knihovna - kvůli jednoduchosti kompilace)
+ *    - Čte řádek po řádku a parsuje klíče pomocí strstr()
+ *    - PROBLÉM: Počítá každý "}" jako konec položky (i konec pole items)
+ *      -> Vrací o 1 více než je skutečný počet položek
+ * 
+ * 5. CollapseAllFoldersFromCache():
+ *    - Zavírá složky od nejvyššího levelu dolů (aby se neměnily indexy)
+ *    - Pro každou složku s hasChildren: ToggleListBoxItem()
+ */
+
 #include "twincat_cache.h"
 #include "twincat_navigator.h"
 #include <stdio.h>
@@ -6,6 +38,8 @@
 #include <time.h>
 
 // Pomocna funkce: Klikne mysi na konkretni polozku ListBoxu
+// Používá SetCursorPos() a mouse_event() pro fyzické kliknutí
+// (alternativa k SendMessage - některé akce vyžadují skutečné kliknutí)
 void ClickListBoxItem(HWND listbox, int itemIndex) {
     RECT rect;
     GetWindowRect(listbox, &rect);
@@ -31,7 +65,8 @@ void ClickListBoxItem(HWND listbox, int itemIndex) {
     SetCursorPos(oldPos.x, oldPos.y);
 }
 
-// Pomocna funkce: Zjisti nazev projektu z prvni polozky
+// Pomocna funkce: Zjisti nazev projektu z prvni polozky (index 0)
+// Používá ExtractTreeItem() pro čtení textu z paměti
 void GetProjectName(HWND listbox, HANDLE hProcess, char* projectName, int maxLen) {
     TreeItem item;
     if (ExtractTreeItem(hProcess, listbox, 0, &item)) {
@@ -42,7 +77,12 @@ void GetProjectName(HWND listbox, HANDLE hProcess, char* projectName, int maxLen
     }
 }
 
-// Expandne VSECHNY slozky v projektu s vypisem progressu
+// Expandne VSECHNY slozky v projektu (iterativní algoritmus)
+// 1. Inicializuje focus kliknutím na první položku (ClickListBoxItem)
+// 2. V cyklu hledá zavřené složky (hasChildren && folderState==0)
+// 3. Expanduje je pomocí ToggleListBoxItem() (double-click)
+// 4. Opakuje dokud nejsou všechny složky otevřené (max 100 iterací)
+// Vrací: počet expandovaných složek (pro info)
 int ExpandAllFoldersWrapper(HWND listbox, HANDLE hProcess) {
     printf("\n[EXPANDALL] Oteviram vsechny slozky...\n");
     
@@ -335,12 +375,7 @@ int LoadCacheFromFile(const char* filename, CachedItem* cache, int maxItems) {
 // Najdi polozku v cache podle textu
 int FindInCache(CachedItem* cache, int count, const char* searchText) {
     printf("[FindInCache] Hledam '%s' v %d polozkach...\n", searchText, count);
-    
-    // Debug: vypis polozku 18
-    if (count > 18) {
-        printf("[DEBUG] cache[18].text = '%s'\n", cache[18].text);
-        printf("[DEBUG] Porovnavam '%s' == '%s' ?\n", cache[18].text, searchText);
-    }
+      
     
     for (int i = 0; i < count; i++) {
         if (_stricmp(cache[i].text, searchText) == 0) {

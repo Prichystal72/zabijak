@@ -1,3 +1,19 @@
+/**
+ * twincat_tree.c - Implementace funkcí pro navigaci ve stromu TwinCAT projektu
+ * 
+ * Klíčová funkce FindAndExpandPath():
+ * - Načte cache z JSON (funkce LoadCacheFromFile z twincat_cache.c)
+ * - Najde položku v cache podle textu (case-insensitive)
+ * - Parsuje cestu na části oddělené "/" (např. "POUs/MAIN/ST_Funkce")
+ * - Postupně expanduje složky:
+ *   1. Najde složku podle textu v aktuálně viditelných položkách
+ *   2. Vybere ji (LB_SETCURSEL)
+ *   3. Double-click pro rozbalení (WM_LBUTTONDBLCLK)
+ *   4. Čeká na změnu počtu položek (nové položky se objeví)
+ *   5. Pokračuje na další část cesty
+ * - Vrátí index nalezené položky nebo -1
+ */
+
 #include "twincat_tree.h"
 #include "twincat_cache.h"
 #include <stdio.h>

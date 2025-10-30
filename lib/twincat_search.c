@@ -1,3 +1,21 @@
+/**
+ * twincat_search.c - Implementace funkcí pro vyhledávání a extrakci názvů
+ * 
+ * Hlavní funkce:
+ * 
+ * 1. ExtractTargetFromTitle():
+ *    - Hledá vzor: "NÁZEV (TYP) - TwinCAT..."
+ *    - Najde první '(' v titulku
+ *    - Extrahuje text před '(' jako název POU
+ *    - Odstraní trailing whitespace
+ *    - Vrací true pokud úspěšné, false pokud '(' nenalezeno
+ * 
+ * 2. TwinCatSearchAndActivate():
+ *    - ZASTARALÁ funkce (není používána v TC2_navigator.c)
+ *    - Alternativní implementace vyhledávání bez cache systému
+ *    - Rekurzivně prochází strom a expanduje složky
+ */
+
 #include "twincat_search.h"
 #include "twincat_navigator.h"
 #include <stdio.h>

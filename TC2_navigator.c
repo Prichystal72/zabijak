@@ -1,22 +1,38 @@
 /**
- * TC2 Navigator - TwinCAT 2 Navigator with Global Hotkey
+ * TC2 Navigator - Globální navigátor pro TwinCAT 2 Project Explorer
  * 
- * Finální aplikace kombinující:
- * - Globální keyboard hook (test_hook_simple.c)
- * - TwinCAT Navigator library (lib/twincat_*.c)
+ * Popis:
+ * Aplikace běží na pozadí a zachytává globální klávesovou zkratku Ctrl+Shift+A.
+ * Po stisku zkratky extrahuje název POU/funkce z titulku aktivního TwinCAT okna
+ * a automaticky naviguje na tuto položku v Project Explorer stromu.
  * 
- * Funkce:
- * - Běží na pozadí s minimální konzolí
- * - Zachytává globální hotkey (Ctrl+Alt+Space)
- * - Automaticky naviguje v TwinCAT Project Explorer
- * - Cache systém pro rychlé vyhledávání
+ * Hlavní funkce:
+ * - Globální keyboard hook pro zachycení Ctrl+Shift+A (funguje v jakékoliv aplikaci)
+ * - Automatická extrakce názvu POU z titulku okna (např. "MAIN (PRG) - TwinCAT PLC Control")
+ * - Vyhledání položky v cache stromu projektu (JSON soubor)
+ * - Automatické rozbalení cesty ke hledané položce
+ * - Fyzické kliknutí a focus na nalezenou položku v ListBoxu
+ * 
+ * Cache systém:
+ * - První spuštění: expanduje celý strom, uloží do JSON, zavře složky
+ * - Další spuštění: načte cache z JSON (rychlé vyhledávání)
+ * - Cache obsahuje: index, text, level, path, hasChildren, flags
+ * 
+ * Použité knihovny:
+ * - lib/twincat_navigator.c - Hledání TwinCAT okna a ListBoxu, čtení paměti
+ * - lib/twincat_tree.c      - Práce se stromovou strukturou, expandování cest
+ * - lib/twincat_cache.c     - Generování a načítání cache, JSON operace
+ * - lib/twincat_search.c    - Extrakce názvu z titulku okna
  * 
  * Kompilace:
- *   gcc -o TC2_navigator.exe TC2_navigator.c lib/twincat_navigator.c lib/twincat_tree.c lib/twincat_cache.c lib/twincat_search.c -luser32 -lpsapi -lcomctl32
+ *   gcc -o TC2_navigator.exe TC2_navigator.c ^
+ *       lib/twincat_navigator.c lib/twincat_tree.c ^
+ *       lib/twincat_cache.c lib/twincat_search.c ^
+ *       -luser32 -lpsapi -lcomctl32
  * 
- * Autostart:
- *   Po přidání do Registry (HKCU\Software\Microsoft\Windows\CurrentVersion\Run)
- *   nebo StartUp složky se aplikace spustí automaticky po přihlášení uživatele
+ * Klávesové zkratky:
+ *   Ctrl+Shift+A   - Aktivovat navigaci (extrahuje název a naviguje)
+ *   Ctrl+Alt+ESC   - Ukončit aplikaci
  */
 
 #include <windows.h>
@@ -39,8 +55,22 @@ CachedItem g_cache[MAX_CACHE_ITEMS];
 int g_cacheSize = 0;
 
 /**
- * Keyboard hook callback
- * Zachytává Ctrl+Alt+Space a spouští TwinCAT navigaci
+ * Keyboard hook callback - zachytává globální klávesové zkratky
+ * 
+ * Zpracovává:
+ * - Ctrl+Shift+A: Spustí navigaci v TwinCAT Project Explorer
+ *   1. Najde TwinCAT okno a ListBox
+ *   2. Načte/vytvoří cache stromu projektu
+ *   3. Extrahuje název POU z titulku okna
+ *   4. Vyhledá položku v cache
+ *   5. Expanduje cestu a klikne na položku
+ * 
+ * - Ctrl+Alt+ESC: Ukončí aplikaci
+ * 
+ * @param nCode  Hook kód (HC_ACTION = zpracuj událost)
+ * @param wParam Typ události (WM_KEYDOWN)
+ * @param lParam Ukazatel na KBDLLHOOKSTRUCT s informacemi o klávese
+ * @return 1 = blokuj další zpracování, CallNextHookEx = předej dál
  */
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode == HC_ACTION && wParam == WM_KEYDOWN) {
@@ -95,7 +125,6 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                     // Cache neexistuje -> vytvorime ho
                     printf("\n=== VYTVARENI CACHE ===\n");
                     
-                    
                     // Expandni vsechny slozky
                     int expandedCount = ExpandAllFoldersWrapper(listbox, hProcess);
                     
@@ -110,113 +139,112 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                     CollapseAllFoldersFromCache(listbox, hProcess, g_cache, g_cacheSize);
                     
                     printf("\n[OK] Cache vytvoren, ulozen a slozky zavreny!\n");
-                    }
+                }
                 
-                    // Test odznaceni - LB_SETTOPINDEX
-                    printf("\n=== TEST: Pokus o odznaceni ===\n");
-                    printf("Nastavuji LB_SETTOPINDEX na 0...\n");
-                    SendMessage(listbox, LB_SETTOPINDEX, 2, 0);
-                    Sleep(50);
-                    printf("Nastavuji LB_SETCURSEL na -1...\n");
-                    SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
-                    Sleep(50);
-                    printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");
+                // Test odznaceni - LB_SETTOPINDEX
+                printf("\n=== TEST: Pokus o odznaceni ===\n");
+                printf("Nastavuji LB_SETTOPINDEX na 0...\n");
+                SendMessage(listbox, LB_SETTOPINDEX, 2, 0);
+                Sleep(50);
+                printf("Nastavuji LB_SETCURSEL na -1...\n");
+                SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
+                Sleep(50);
+                printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");
+                
+                printf("\n=== TEST: Pokus o odznaceni ===\n");
+                printf("Nastavuji LB_SETTOPINDEX na 0...\n");
+                SendMessage(listbox, LB_SETTOPINDEX, 2, 0);
+                Sleep(50);
+                printf("Nastavuji LB_SETCURSEL na -1...\n");
+                SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
+                Sleep(50);
+                printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");
+                
+                printf("\n===================================================\n");
+                printf("HOTOVO!\n");
+                printf("Cache soubor: %s\n", CACHE_FILE);
+                printf("Celkem polozek v cache: %d\n", g_cacheSize);
+                printf("===================================================\n");
+                
+                printf("[TODO] TwinCAT navigation will be implemented here\n");
+                
+                char windowTitle[512];
+                GetWindowText(twincatWindow, windowTitle, sizeof(windowTitle));
+                
+                printf("Nalezeno TwinCAT okno:\n");
+                printf("Titulek: '%s'\n\n", windowTitle);
+                
+                char target[256];
+                if (ExtractTargetFromTitle(windowTitle, target, sizeof(target))) {
+                    printf("✓ Extrahovaný název: '%s'\n", target);
+                    // TODO: Implementace navigace podle extrahovaného názvu
+                    printf("\nHledam polozku: %s\n", target);
                     
-                        printf("\n=== TEST: Pokus o odznaceni ===\n");
-                    printf("Nastavuji LB_SETTOPINDEX na 0...\n");
-                    SendMessage(listbox, LB_SETTOPINDEX, 2, 0);
-                    Sleep(50);
-                    printf("Nastavuji LB_SETCURSEL na -1...\n");
-                    SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
-                    Sleep(50);
-                    printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");
+                    // Zavolej funkci hledani
+                    int foundIndex = FindAndExpandPath(listbox, hProcess, target);
                     
-                    printf("\n===================================================\n");
-                    printf("HOTOVO!\n");
-                    printf("Cache soubor: %s\n", CACHE_FILE);
-                    printf("Celkem polozek v cache: %d\n", g_cacheSize);
-                    printf("===================================================\n");
-                                
-                    printf("[TODO] TwinCAT navigation will be implemented here\n");
-
-                    char windowTitle[512];
-                    GetWindowText(twincatWindow, windowTitle, sizeof(windowTitle));
-                    
-                    printf("Nalezeno TwinCAT okno:\n");
-                    printf("Titulek: '%s'\n\n", windowTitle);
-                    
-                    char target[256];
-                    if (ExtractTargetFromTitle(windowTitle, target, sizeof(target))) {
-                        printf("✓ Extrahovaný název: '%s'\n", target);
-                        // TODO: Implementace navigace podle extrahovaného názvu
-                        printf("\nHledam polozku: %s\n", target);
-    
-                        // Zavolej funkci hledani
-                        int foundIndex = FindAndExpandPath(listbox, hProcess, target);
-
-                        if (foundIndex >= 0) {
-                            printf("\n========================================\n");
-                            printf("VYSLEDEK: Polozka nalezena na indexu %d\n", foundIndex);
-                            printf("========================================\n");
-                            
-                            // FOCUSUJ a OZNAC nalezenou polozku v ListBoxu
-                            printf("\n[AKCE] Focusuji polozku v TwinCAT okne...\n");
-                            
-                            // 1. Aktivuj TwinCAT okno
-                            SetForegroundWindow(twincatWindow);
-                            Sleep(100);
-                            
-                            // 2. Zamer na ListBox
-                            SetFocus(listbox);
-                            Sleep(100);
-                            
-                            // 3. Vyber polozku
-                            LRESULT result = SendMessage(listbox, LB_SETCURSEL, foundIndex, 0);
-                            Sleep(100);
-                            
-                            if (result == LB_ERR) {
-                                printf("[X] Nelze vybrat polozku (LB_SETCURSEL vratilo LB_ERR)\n");
-                            } else {
-                                printf("[OK] Polozka [%d] vybrana\n", foundIndex);
-                            }
-                            
-                            // 4. KLIKNI na polozku (double-click pro otevreni)
-                            printf("[AKCE] Klikam na polozku...\n");
-                            PostMessage(listbox, WM_LBUTTONDBLCLK, 0, MAKELPARAM(10, foundIndex * 16));
-                            Sleep(20);
-                            printf("[OK] Polozka otevrena!\n");
-                            
-                            // Zobraz okolni polozky pro kontext
-                            printf("\nKONTEXT (okolni polozky):\n");
-                            TreeItem items[10];
-                            int startIdx = (foundIndex > 2) ? foundIndex - 2 : 0;
-                            
-                            for (int i = 0; i < 5 && (startIdx + i) < GetListBoxItemCount(listbox); i++) {
-                                TreeItem item;
-                                if (ExtractTreeItem(hProcess, listbox, startIdx + i, &item)) {
-                                    if (startIdx + i == foundIndex) {
-                                        printf(">>> [%2d] L%d %s  <<<< TADY!\n", 
-                                            startIdx + i, item.position, item.text);
-                                    } else {
-                                        printf("    [%2d] L%d %s\n", 
-                                            startIdx + i, item.position, item.text);
-                                    }
+                    if (foundIndex >= 0) {
+                        printf("\n========================================\n");
+                        printf("VYSLEDEK: Polozka nalezena na indexu %d\n", foundIndex);
+                        printf("========================================\n");
+                        
+                        // FOCUSUJ a OZNAC nalezenou polozku v ListBoxu
+                        printf("\n[AKCE] Focusuji polozku v TwinCAT okne...\n");
+                        
+                        // 1. Aktivuj TwinCAT okno
+                        SetForegroundWindow(twincatWindow);
+                        Sleep(100);
+                        
+                        // 2. Zamer na ListBox
+                        SetFocus(listbox);
+                        Sleep(100);
+                        
+                        // 3. Vyber polozku
+                        LRESULT result = SendMessage(listbox, LB_SETCURSEL, foundIndex, 0);
+                        Sleep(100);
+                        
+                        if (result == LB_ERR) {
+                            printf("[X] Nelze vybrat polozku (LB_SETCURSEL vratilo LB_ERR)\n");
+                        } else {
+                            printf("[OK] Polozka [%d] vybrana\n", foundIndex);
+                        }
+                        
+                        // 4. KLIKNI na polozku (double-click pro otevreni)
+                        printf("[AKCE] Klikam na polozku...\n");
+                        PostMessage(listbox, WM_LBUTTONDBLCLK, 0, MAKELPARAM(10, foundIndex * 16));
+                        Sleep(20);
+                        printf("[OK] Polozka otevrena!\n");
+                        
+                        // Zobraz okolni polozky pro kontext
+                        printf("\nKONTEXT (okolni polozky):\n");
+                        TreeItem items[10];
+                        int startIdx = (foundIndex > 2) ? foundIndex - 2 : 0;
+                        
+                        for (int i = 0; i < 5 && (startIdx + i) < GetListBoxItemCount(listbox); i++) {
+                            TreeItem item;
+                            if (ExtractTreeItem(hProcess, listbox, startIdx + i, &item)) {
+                                if (startIdx + i == foundIndex) {
+                                    printf(">>> [%2d] L%d %s  <<<< TADY!\n", 
+                                           startIdx + i, item.position, item.text);
+                                } else {
+                                    printf("    [%2d] L%d %s\n", 
+                                           startIdx + i, item.position, item.text);
                                 }
                             }
-                        } else {
-                            printf("\n========================================\n");
-                            printf("VYSLEDEK: Polozka '%s' nebyla nalezena\n", target);
-                            printf("========================================\n");
                         }
-
                     } else {
-                        printf("✗ Nepodařilo se extrahovat název z titulku\n");
-                    } 
-                                        
+                        printf("\n========================================\n");
+                        printf("VYSLEDEK: Polozka '%s' nebyla nalezena\n", target);
+                        printf("========================================\n");
+                    }
                     
-                    CloseHandle(hProcess);
+                } else {
+                    printf("✗ Nepodařilo se extrahovat název z titulku\n");
+                }
+                
+                CloseHandle(hProcess);
                 return 1; // Blokuj další zpracování
-            
+            }
         }
         
         // ESC pro ukončení
@@ -232,7 +260,6 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
             }
         }
     }
-}
     return CallNextHookEx(g_Hook, nCode, wParam, lParam);
 }
 
@@ -244,7 +271,7 @@ int main() {
     printf("  TC2 Navigator v1.0\n");
     printf("========================================\n");
     printf("Hotkeys:\n");
-    printf("  Ctrl+Alt+Space  - Activate navigator\n");
+    printf("  Ctrl+Alt+A  - Activate navigator\n");
     printf("  Ctrl+Alt+ESC    - Exit\n");
     printf("========================================\n\n");
     
