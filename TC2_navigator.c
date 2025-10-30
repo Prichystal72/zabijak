@@ -118,10 +118,16 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                     SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
                     Sleep(50);
                     printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");
-                    ClickListBoxItem(listbox, 0);
-                    Sleep(50);
                     
-                    ClickListBoxItem(listbox, 0);
+                        printf("\n=== TEST: Pokus o odznaceni ===\n");
+                    printf("Nastavuji LB_SETTOPINDEX na 0...\n");
+                    SendMessage(listbox, LB_SETTOPINDEX, 2, 0);
+                    Sleep(50);
+                    printf("Nastavuji LB_SETCURSEL na -1...\n");
+                    SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
+                    Sleep(50);
+                    printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");
+                    
                     printf("\n===================================================\n");
                     printf("HOTOVO!\n");
                     printf("Cache soubor: %s\n", CACHE_FILE);
@@ -129,6 +135,19 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                     printf("===================================================\n");
                                 
                     printf("[TODO] TwinCAT navigation will be implemented here\n");
+
+                    char windowTitle[512];
+                    GetWindowText(twincatWindow, windowTitle, sizeof(windowTitle));
+                    
+                    printf("Nalezeno TwinCAT okno:\n");
+                    printf("Titulek: '%s'\n\n", windowTitle);
+                    
+                    char target[256];
+                    if (ExtractTargetFromTitle(windowTitle, target, sizeof(target))) {
+                        printf("✓ Extrahovaný název: '%s'\n", target);
+                    } else {
+                        printf("✗ Nepodařilo se extrahovat název z titulku\n");
+                    } 
                     
                     
                     CloseHandle(hProcess);
