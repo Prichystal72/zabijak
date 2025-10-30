@@ -74,7 +74,7 @@ int ExpandAllFoldersWrapper(HWND listbox, HANDLE hProcess) {
                 
                 int countBefore = itemCount;
                 ToggleListBoxItem(listbox, i);
-                Sleep(1);
+                Sleep(50);
                 SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
                 
                 int countAfter = GetListBoxItemCount(listbox);
@@ -138,7 +138,7 @@ int LoadFullTree(HWND listbox, HANDLE hProcess, CachedItem* cache, int maxItems)
         
         prevLevel = item.position;
     }
-    
+
     printf("[OK] Nacteno %d polozek do cache\n", itemCount);
     return itemCount;
 }
@@ -189,7 +189,7 @@ void CollapseAllFoldersFromCache(HWND listbox, HANDLE hProcess, CachedItem* cach
                     //printf("    [cache:%d -> listbox:%d] '%s' (L%d): Zaviram...\n", 
                        //    i, actualIndex, cache[i].text, cache[i].level);
                     ToggleListBoxItem(listbox, actualIndex);
-                    Sleep(1);     // ToDo upravit zpět na 1 ms
+                    Sleep(50);     // ToDo upravit zpět na 1 ms
                     SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
                     closedCount++;
                 }
@@ -201,7 +201,7 @@ void CollapseAllFoldersFromCache(HWND listbox, HANDLE hProcess, CachedItem* cach
     // Dvojite kliknuti na POUs pro vymazani modreho zvyrazneni
     printf("  Odstranuji modre zvyrazneni (dvojite kliknuti na POUs)...\n");
     SetFocus(listbox);
-    Sleep(1);
+    Sleep(50);
     
     // Prvni kliknuti 
     ClickListBoxItem(listbox, 0);
@@ -317,8 +317,12 @@ int LoadCacheFromFile(const char* filename, CachedItem* cache, int maxItems) {
         else if (strstr(line, "\"flags\":")) {
             sscanf(line, " \"flags\": \"0x%X\"", &cache[count].flags);
         }
-        // Konec objektu
-        else if (strstr(line, "}")) {
+        // Konec objektu polozky (s carkou nebo posledni polozka)
+        else if (strstr(line, "},")) {
+            count++;
+        }
+        // Posledni polozka (bez carky)
+        else if (strstr(line, "    }") && count > 0) {
             count++;
         }
     }

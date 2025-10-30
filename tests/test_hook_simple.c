@@ -12,16 +12,21 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode == HC_ACTION && wParam == WM_KEYDOWN) {
         KBDLLHOOKSTRUCT *kb = (KBDLLHOOKSTRUCT *)lParam;
         
-        printf("Key pressed: VK=0x%02X\n", kb->vkCode);
+        //printf("Key pressed: VK=0x%02X, flags=0x%08X\n", kb->vkCode, kb->flags);
         
-        // Test: Ctrl+Alt+Space
-        if (kb->vkCode == VK_SPACE) {
-            bool ctrl = (GetAsyncKeyState(VK_LCONTROL) & 0x8000) != 0;
-            bool alt = (GetAsyncKeyState(VK_LMENU) & 0x8000) != 0;
+        // Test: Ctrl+Shift+Z (bezpečnější než Alt)
+        if (kb->vkCode == 'A') {
+            // Použij GetKeyState místo GetAsyncKeyState pro spolehlivější detekci
+            SHORT ctrlState = GetKeyState(VK_CONTROL);
+            SHORT shiftState = GetKeyState(VK_SHIFT);
             
-            printf("  SPACE! Ctrl=%d, Alt=%d\n", ctrl, alt);
+            bool ctrl = (ctrlState & 0x8000) != 0;
+            bool shift = (shiftState & 0x8000) != 0;
             
-            if (ctrl && alt) {
+            //printf("  Z pressed! Ctrl=%d (0x%04X), Shift=%d (0x%04X)\n", 
+               //    ctrl, ctrlState, shift, shiftState);
+            
+            if (ctrl && shift) {
                 printf("  >>> HOTKEY DETECTED! <<<\n");
                 MessageBeep(MB_OK);
                 // Otevri Win+R
@@ -40,7 +45,7 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
 int main() {
     printf("=== TEST KEYBOARD HOOK ===\n");
-    printf("Press Left Ctrl + Left Alt + Space\n");
+    printf("Press Ctrl + Shift + Z to test hotkey\n");
     printf("Press ESC to exit\n\n");
     
     // Instalace hooku

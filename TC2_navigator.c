@@ -46,16 +46,19 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode == HC_ACTION && wParam == WM_KEYDOWN) {
         KBDLLHOOKSTRUCT *kb = (KBDLLHOOKSTRUCT *)lParam;
         
-        printf("Key pressed: VK=0x%02X\n", kb->vkCode);
+        //printf("Key pressed: VK=0x%02X\n", kb->vkCode);
         
         // Test: Ctrl+Alt+Space
-        if (kb->vkCode == VK_SPACE) {
-            bool ctrl = (GetAsyncKeyState(VK_LCONTROL) & 0x8000) != 0;
-            bool alt = (GetAsyncKeyState(VK_LMENU) & 0x8000) != 0;
+        if (kb->vkCode == 'A') {
+            // Použij GetKeyState místo GetAsyncKeyState pro spolehlivější detekci
+            SHORT ctrlState = GetKeyState(VK_CONTROL);
+            SHORT shiftState = GetKeyState(VK_SHIFT);
             
             //printf("  SPACE! Ctrl=%d, Alt=%d\n", ctrl, alt);
-            
-            
+            bool ctrl = (ctrlState & 0x8000) != 0;
+            bool shift = (shiftState & 0x8000) != 0;
+
+            if (ctrl && shift) {
                 printf("  >>> HOTKEY DETECTED! <<<\n");
                 MessageBeep(MB_OK);
                 
@@ -145,10 +148,71 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                     char target[256];
                     if (ExtractTargetFromTitle(windowTitle, target, sizeof(target))) {
                         printf("✓ Extrahovaný název: '%s'\n", target);
+                        // TODO: Implementace navigace podle extrahovaného názvu
+                        printf("\nHledam polozku: %s\n", target);
+    
+                        // Zavolej funkci hledani
+                        int foundIndex = FindAndExpandPath(listbox, hProcess, target);
+
+                        if (foundIndex >= 0) {
+                            printf("\n========================================\n");
+                            printf("VYSLEDEK: Polozka nalezena na indexu %d\n", foundIndex);
+                            printf("========================================\n");
+                            
+                            // FOCUSUJ a OZNAC nalezenou polozku v ListBoxu
+                            printf("\n[AKCE] Focusuji polozku v TwinCAT okne...\n");
+                            
+                            // 1. Aktivuj TwinCAT okno
+                            SetForegroundWindow(twincatWindow);
+                            Sleep(100);
+                            
+                            // 2. Zamer na ListBox
+                            SetFocus(listbox);
+                            Sleep(100);
+                            
+                            // 3. Vyber polozku
+                            LRESULT result = SendMessage(listbox, LB_SETCURSEL, foundIndex, 0);
+                            Sleep(100);
+                            
+                            if (result == LB_ERR) {
+                                printf("[X] Nelze vybrat polozku (LB_SETCURSEL vratilo LB_ERR)\n");
+                            } else {
+                                printf("[OK] Polozka [%d] vybrana\n", foundIndex);
+                            }
+                            
+                            // 4. KLIKNI na polozku (double-click pro otevreni)
+                            printf("[AKCE] Klikam na polozku...\n");
+                            PostMessage(listbox, WM_LBUTTONDBLCLK, 0, MAKELPARAM(10, foundIndex * 16));
+                            Sleep(20);
+                            printf("[OK] Polozka otevrena!\n");
+                            
+                            // Zobraz okolni polozky pro kontext
+                            printf("\nKONTEXT (okolni polozky):\n");
+                            TreeItem items[10];
+                            int startIdx = (foundIndex > 2) ? foundIndex - 2 : 0;
+                            
+                            for (int i = 0; i < 5 && (startIdx + i) < GetListBoxItemCount(listbox); i++) {
+                                TreeItem item;
+                                if (ExtractTreeItem(hProcess, listbox, startIdx + i, &item)) {
+                                    if (startIdx + i == foundIndex) {
+                                        printf(">>> [%2d] L%d %s  <<<< TADY!\n", 
+                                            startIdx + i, item.position, item.text);
+                                    } else {
+                                        printf("    [%2d] L%d %s\n", 
+                                            startIdx + i, item.position, item.text);
+                                    }
+                                }
+                            }
+                        } else {
+                            printf("\n========================================\n");
+                            printf("VYSLEDEK: Polozka '%s' nebyla nalezena\n", target);
+                            printf("========================================\n");
+                        }
+
                     } else {
                         printf("✗ Nepodařilo se extrahovat název z titulku\n");
                     } 
-                    
+                                        
                     
                     CloseHandle(hProcess);
                 return 1; // Blokuj další zpracování
@@ -168,7 +232,7 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
             }
         }
     }
-    
+}
     return CallNextHookEx(g_Hook, nCode, wParam, lParam);
 }
 
