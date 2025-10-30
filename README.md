@@ -51,7 +51,7 @@ Aplikace běží na pozadí a zachytává globální klávesové zkratky.
 4. Uloží do `twincat_tree_cache.json`
 5. Zavře všechny složky zpět
 
-**Trvá:** ~5-100 sekund (závisí na velikosti projektu)
+**Trvá:** ~5-10 sekund (závisí na velikosti projektu)
 
 ### Další spuštění (rychlá navigace)
 1. Načte cache z JSON souboru (rychlé, bez expandování)

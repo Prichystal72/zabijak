@@ -1,0 +1,41 @@
+# TC2 Navigator - Návod k použití
+
+## Co to dělá?
+
+Aplikace umožňuje **rychle najít a otevřít libovolný POU v TwinCAT 2 pomocí klávesové zkratky**, bez klikání myší po Project Explorer stromu.
+
+## Jak to použít?
+
+1. **Spusť `TC2_navigator.exe`** - aplikace se skryje na pozadí
+2. **Otevři TwinCAT 2 projekt** (PLC Control nebo System Manager)
+3. **Otevři nějaký POU** (např. MAIN nebo ST_Funkce) - titulek okna se změní
+4. **Stiskni `Ctrl+Shift+A`** - aplikace automaticky najde a označí tento POU v Project Explorer
+
+## Co se stane při prvním spuštění?
+
+- Aplikace **načte celý projekt** do cache souboru `twincat_tree_cache.json` (~5-10 sekund)
+- Další spuštění jsou **okamžitá** - pracuje se z cache
+
+## Kdy smazat cache?
+
+Pokud změníš strukturu projektu (přidáš/odstraníš POU, přejmenujete složky), smaž soubor `twincat_tree_cache.json` a restartuj aplikaci.
+
+## Klávesové zkratky
+
+- **`Ctrl+Shift+A`** - Navigovat na aktuální POU
+- **`Ctrl+Alt+ESC`** - Ukončit aplikaci
+
+## Řešení problémů
+
+**Aplikace nenajde TwinCAT okno:**
+- Zkontroluj, že TwinCAT PLC Control běží a má otevřený projekt
+
+**Navigace nefunguje:**
+- Smaž `twincat_tree_cache.json` a nech aplikaci přegenerovat cache
+
+**Program spadne:**
+- Spusť jako administrátor (pravý klik → "Run as Administrator")
+
+---
+
+**Hotovo!** Nyní můžeš rychle navigovat v TwinCAT bez myši. 🚀

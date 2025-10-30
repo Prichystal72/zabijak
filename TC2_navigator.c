@@ -248,12 +248,18 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
         }
         
         // ESC pro ukončení
-        if (kb->vkCode == VK_ESCAPE) {
-            bool ctrl = (GetAsyncKeyState(VK_LCONTROL) & 0x8000) != 0;
-            bool alt = (GetAsyncKeyState(VK_LMENU) & 0x8000) != 0;
-            
-            if (ctrl && alt) {
-                printf("\n[EXIT] Ctrl+Alt+ESC - Shutting down...\n");
+        if (kb->vkCode == 'Q') {
+
+            // Použij GetKeyState místo GetAsyncKeyState pro spolehlivější detekci
+            SHORT ctrlState = GetKeyState(VK_CONTROL);
+            SHORT shiftState = GetKeyState(VK_SHIFT);
+        
+            bool ctrl = (ctrlState & 0x8000) != 0;
+            bool shift = (shiftState & 0x8000) != 0;
+
+            if (ctrl && shift) {
+
+                printf("\n[EXIT] Ctrl+Shift+Q - Shutting down...\n");
                 g_Running = false;
                 PostQuitMessage(0);
                 return 1;
@@ -271,8 +277,8 @@ int main() {
     printf("  TC2 Navigator v1.0\n");
     printf("========================================\n");
     printf("Hotkeys:\n");
-    printf("  Ctrl+Alt+A  - Activate navigator\n");
-    printf("  Ctrl+Alt+ESC    - Exit\n");
+    printf("  Ctrl+Shift+A  - Activate navigator\n");
+    printf("  Ctrl+Shift+Q    - Exit\n");
     printf("========================================\n\n");
     
     // Instalace keyboard hooku
