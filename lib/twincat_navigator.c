@@ -343,13 +343,13 @@ int ToggleListBoxItem(HWND hListBox, int index) {
     if (result == LB_ERR) {
         return 0;
     }
-    Sleep(1);
+    Sleep(10);
     
     // Posli RETURN pro otevreni/zavreni
     PostMessage(hListBox, WM_KEYDOWN, VK_RETURN, 0);
     PostMessage(hListBox, WM_KEYUP, VK_RETURN, 0);
     
-    Sleep(1);  // Pauza pro dokonceni akce
+    Sleep(10);  // Pauza pro dokonceni akce
     
     // Ziskej pocet polozek PO akci
     int countAfter = SendMessage(hListBox, LB_GETCOUNT, 0, 0);

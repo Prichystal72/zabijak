@@ -228,12 +228,12 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                         
                         // 1. Aktivuj TwinCAT okno
                         SetForegroundWindow(twincatWindow);
-                        Sleep(100);
+                        Sleep(1000);
                         
                         // 2. Zamer na ListBox
                         SetFocus(listbox);
-                        Sleep(100);
-                        
+                        Sleep(1000);
+
                         // 3. Vyber polozku
                         LRESULT result = SendMessage(listbox, LB_SETCURSEL, foundIndex, 0);
                         Sleep(100);
@@ -278,7 +278,7 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                 }
                 
                 CloseHandle(hProcess);
-                return 1; // Blokuj další zpracování
+                return 1; 
             }
         }
         
