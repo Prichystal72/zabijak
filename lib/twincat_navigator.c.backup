@@ -27,11 +27,15 @@ HWND FindTwinCatWindow(void) {
     return NULL;
 }
 
+// Najde nejlevější ListBox v TwinCAT okně (= Project Explorer)
 HWND FindProjectListBox(HWND parentWindow) {
+    printf("\n[DEBUG] Hledani nejlevejsiho ListBoxu...\n");
+
     HWND leftmostListBox = NULL;
     int leftmostPosition = 99999;
     RECT parentRect;
     GetWindowRect(parentWindow, &parentRect);
+    int listboxCount = 0;
 
     HWND childWindow = GetWindow(parentWindow, GW_CHILD);
     while (childWindow != NULL) {
@@ -39,17 +43,121 @@ HWND FindProjectListBox(HWND parentWindow) {
         GetClassName(childWindow, className, sizeof(className));
 
         if (strcmp(className, "ListBox") == 0) {
+            listboxCount++;
+            char windowText[256];
+            GetWindowText(childWindow, windowText, sizeof(windowText));
+            
             RECT rect;
             GetWindowRect(childWindow, &rect);
-            int relativeLeft = rect.left - parentRect.left;
 
+            int itemCount = SendMessage(childWindow, LB_GETCOUNT, 0, 0);
+            int height = rect.bottom - rect.top;
+            int width = rect.right - rect.left;
+
+            // Skore pro vyber nejlepsiho ListBoxu
+            int score = itemCount + height / 10;
+            
+            // NEJLEVĚJŠÍ ListBox má nejvyšší prioritu
+            int relativeLeft = rect.left - parentRect.left;
             if (relativeLeft < leftmostPosition) {
                 leftmostPosition = relativeLeft;
-                leftmostListBox = childWindow;
+                score += 500; // MEGA bonus pro nejlevější ListBox
+            } else if (relativeLeft == leftmostPosition) {
+                score += 500; // Stejná pozice = stejný bonus
             }
+            // Ostatní ListBoxy nedostávají poziční bonus
+
+            printf("[ListBox %d] Handle: 0x%p\n", listboxCount, (void*)childWindow);
+            printf("  Text: '%s'\n", windowText);
+            printf("  Pozice: (%d,%d) relativni: (%d,%d)\n", 
+                   rect.left, rect.top, 
+                   rect.left - parentRect.left, rect.top - parentRect.top);
+            printf("  Velikost: %dx%d\n", width, height);
+            printf("  Pocet polozek: %d\n", itemCount);
+            printf("  Leva pozice: %s (< %d)\n", isLeft ? "ANO" : "NE", windowWidth / 3);
+            printf("  Skore: %d\n", score);
+
+            // Pokud obsahuje "Project" nebo "POUs", je to kandidát
+            if (strstr(windowText, "Project") || strstr(windowText, "POUs") || 
+                strstr(windowText, "Explorer")) {
+                printf("  >>> NALEZEN PODLE TEXTU! <<<\n\n");
+                return childWindow;
+            }
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestListBox = childWindow;
+                printf("  >>> NOVY NEJLEPSI! <<<\n");
+            }
+            printf("\n");
+        }
+
+        // Rekurzivně prohledej child okna
+        HWND subChild = GetWindow(childWindow, GW_CHILD);
+        while (subChild != NULL) {
+            char subClassName[256];
+            GetClassName(subChild, subClassName, sizeof(subClassName));
+
+            if (strcmp(subClassName, "ListBox") == 0) {
+                listboxCount++;
+                char subWindowText[256];
+                GetWindowText(subChild, subWindowText, sizeof(subWindowText));
+                
+                RECT rect;
+                GetWindowRect(subChild, &rect);
+
+                int itemCount = SendMessage(subChild, LB_GETCOUNT, 0, 0);
+                int height = rect.bottom - rect.top;
+                int width = rect.right - rect.left;
+
+                int score = itemCount + height / 10;
+                
+                // NEJLEVĚJŠÍ ListBox má nejvyšší prioritu
+                int relativeLeft = rect.left - parentRect.left;
+                if (relativeLeft < leftmostPosition) {
+                    leftmostPosition = relativeLeft;
+                    score += 500; // MEGA bonus pro nejlevější ListBox
+                } else if (relativeLeft == leftmostPosition) {
+                    score += 500; // Stejná pozice = stejný bonus
+                }
+
+                printf("[Sub-ListBox %d] Handle: 0x%p\n", listboxCount, (void*)subChild);
+                printf("  Text: '%s'\n", subWindowText);
+                printf("  Pozice: (%d,%d) relativni: (%d,%d)\n", 
+                       rect.left, rect.top,
+                       rect.left - parentRect.left, rect.top - parentRect.top);
+                printf("  Velikost: %dx%d\n", width, height);
+                printf("  Pocet polozek: %d\n", itemCount);
+                printf("  Leva pozice: %dpx (nejlevejsi: %dpx)\n", relativeLeft, leftmostPosition);
+                printf("  Skore: %d\n", score);
+
+                // Pokud obsahuje "Project" nebo "POUs", je to kandidát
+                if (strstr(subWindowText, "Project") || strstr(subWindowText, "POUs") || 
+                    strstr(subWindowText, "Explorer")) {
+                    printf("  >>> NALEZEN PODLE TEXTU! <<<\n\n");
+                    return subChild;
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestListBox = subChild;
+                    printf("  >>> NOVY NEJLEPSI! <<<\n");
+                }
+                printf("\n");
+            }
+
+            subChild = GetWindow(subChild, GW_HWNDNEXT);
         }
 
         childWindow = GetWindow(childWindow, GW_HWNDNEXT);
+    }
+
+    printf("Celkem nalezeno %d ListBoxu\n", listboxCount);
+    if (leftmostListBox) {
+        printf("Nejlevejsi ListBox: 0x%p na pozici %dpx\n\n", 
+               (void*)leftmostListBox, leftmostPosition);
+    } else {
+        printf("Zadny ListBox nenalezen!\n\n");
     }
 
     return leftmostListBox;
@@ -735,23 +843,18 @@ int ExtractAllItemsFromMemory(HANDLE hProcess, TreeItem* items, int maxItems) {
 //   "TwinCAT PLC Control - [CELA.pro - POUs]" -> "CELA"
 //   "TwinCAT PLC Control - [ST00_PRG.EXP]" -> "ST00_PRG"
 //   "TwinCAT PLC Control - [Stations\ST_00\ST00_PRGs\ST00_CallPRGs.EXP]" -> "ST00_CallPRGs"
-//   "TwinCAT PLC Control - [Aktion Robot01_PosPal - Exit (ST) - SpecialMode06 (PRG-SFC)]" -> "SpecialMode06"
 bool ExtractTargetFromTitle(const char* windowTitle, char* targetText, int maxLength) {
     if (!windowTitle || !targetText || maxLength < 1) {
-        printf("[DEBUG] ExtractTargetFromTitle: Neplatné parametry\n");
         return false;
     }
     
     targetText[0] = '\0';
-    
-    printf("[DEBUG] Parsing titulku: '%s'\n", windowTitle);
     
     // Najdi text mezi '[' a ']'
     const char* start = strchr(windowTitle, '[');
     const char* end = strchr(windowTitle, ']');
     
     if (!start || !end || end <= start) {
-        printf("[DEBUG] Nenalezeny závorky []\n");
         return false;
     }
     
@@ -766,98 +869,6 @@ bool ExtractTargetFromTitle(const char* windowTitle, char* targetText, int maxLe
     strncpy(buffer, start, len);
     buffer[len] = '\0';
     
-    printf("[DEBUG] Text mezi závorkami: '%s'\n", buffer);
-    
-    // DETEKCE SFC: "NĚCO (TYP) - PROGRAM (PRG-SFC)" nebo "PROGRAM (PRG-SFC)"
-    if (strstr(buffer, "(PRG-SFC)")) {
-        printf("[DEBUG] Detekován SFC pattern!\n");
-        
-        // Najdi "(PRG-SFC)"
-        char* prg_sfc = strstr(buffer, "(PRG-SFC)");
-        if (prg_sfc) {
-            // Kontrola, jestli obsahuje " - " (akce v SFC)
-            char* last_dash = NULL;
-            char* search_pos = prg_sfc;
-            
-            // Hledej poslední " - " před "(PRG-SFC)"
-            while (search_pos > buffer) {
-                search_pos--;
-                if (search_pos > buffer + 2 && strncmp(search_pos, " - ", 3) == 0) {
-                    last_dash = search_pos;
-                    break;
-                }
-            }
-            
-            if (last_dash) {
-                // PŘÍPAD 1: "ACTION - PROGRAM (PRG-SFC)"
-                printf("[DEBUG] SFC s akcí/krokem\n");
-                last_dash += 3; // Přeskoč " - "
-                
-                // Extrahuj název programu
-                char program_name[256];
-                int program_len = (int)(prg_sfc - last_dash);
-                if (program_len > 0 && program_len < sizeof(program_name)) {
-                    strncpy(program_name, last_dash, program_len);
-                    program_name[program_len] = '\0';
-                    
-                    // Odstraň mezery na konci
-                    while (program_len > 0 && program_name[program_len-1] == ' ') {
-                        program_name[--program_len] = '\0';
-                    }
-                    
-                    printf("[DEBUG] SFC Program: '%s'\n", program_name);
-                    
-                    // Extrahuj název akce/kroku (před " - ")
-                    char action_name[256];
-                    int action_len = (int)(last_dash - 3 - buffer);
-                    if (action_len > 0 && action_len < sizeof(action_name)) {
-                        strncpy(action_name, buffer, action_len);
-                        action_name[action_len] = '\0';
-                        printf("[DEBUG] SFC Action/Step: '%s'\n", action_name);
-                    }
-                    
-                    // Vrátíme název programu
-                    strncpy(targetText, program_name, maxLength - 1);
-                    targetText[maxLength - 1] = '\0';
-                    
-                    printf("[DEBUG] Výsledek (SFC program): '%s'\n", targetText);
-                    return true;
-                }
-            } else {
-                // PŘÍPAD 2: "PROGRAM (PRG-SFC)" - jen samotný program
-                printf("[DEBUG] SFC bez akce - jen program\n");
-                
-                // Extrahuj název programu (celý buffer bez " (PRG-SFC)")
-                char program_name[256];
-                int program_len = (int)(prg_sfc - buffer);
-                if (program_len > 0 && program_len < sizeof(program_name)) {
-                    strncpy(program_name, buffer, program_len);
-                    program_name[program_len] = '\0';
-                    
-                    // Odstraň mezery na konci
-                    while (program_len > 0 && program_name[program_len-1] == ' ') {
-                        program_name[--program_len] = '\0';
-                    }
-                    
-                    printf("[DEBUG] SFC Program (samotný): '%s'\n", program_name);
-                    
-                    // Vrátíme název programu
-                    strncpy(targetText, program_name, maxLength - 1);
-                    targetText[maxLength - 1] = '\0';
-                    
-                    printf("[DEBUG] Výsledek (SFC program): '%s'\n", targetText);
-                    return true;
-                }
-            }
-        }
-        
-        printf("[DEBUG] Chyba při parsování SFC pattern\n");
-        return false;
-    }
-    
-    printf("[DEBUG] Standardní parsing (není SFC Action)\n");
-    
-    // STANDARDNÍ PARSING pro obyčejné soubory
     // Najdi poslední '\' nebo '/' (pro cestu k souboru)
     char* lastSlash = strrchr(buffer, '\\');
     if (!lastSlash) {
@@ -866,20 +877,17 @@ bool ExtractTargetFromTitle(const char* windowTitle, char* targetText, int maxLe
     
     // Pokud je cesta, vezmi jen koncový název souboru
     char* fileName = lastSlash ? (lastSlash + 1) : buffer;
-    printf("[DEBUG] Název souboru: '%s'\n", fileName);
     
     // Odstraň příponu (.pro, .EXP, atd.)
     char* dot = strchr(fileName, '.');
     if (dot) {
         *dot = '\0';
-        printf("[DEBUG] Po odstranění přípony: '%s'\n", fileName);
     }
     
     // Odstraň suffix po " - " (např. "CELA.pro - POUs" -> "CELA")
     char* dash = strstr(fileName, " - ");
     if (dash) {
         *dash = '\0';
-        printf("[DEBUG] Po odstranění suffix: '%s'\n", fileName);
     }
     
     // Odstraň typ v závorkách (např. "MachineStates (PRG-ST)" -> "MachineStates")
@@ -890,13 +898,11 @@ bool ExtractTargetFromTitle(const char* windowTitle, char* targetText, int maxLe
             bracket--;
         }
         *bracket = '\0';
-        printf("[DEBUG] Po odstranění závorek: '%s'\n", fileName);
     }
     
     // Zkopíruj výsledek
     strncpy(targetText, fileName, maxLength - 1);
     targetText[maxLength - 1] = '\0';
     
-    printf("[DEBUG] Finální výsledek: '%s'\n", targetText);
     return (targetText[0] != '\0');
 }

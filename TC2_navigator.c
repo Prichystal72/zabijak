@@ -90,7 +90,7 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
             if (ctrl && shift) {
                 printf("  >>> HOTKEY DETECTED! <<<\n");
-                MessageBeep(MB_OK);
+                //MessageBeep(MB_OK);
                 
                 printf("===================================================\n");
                 printf("  TEST: TREE CACHE (Expand All -> Save -> Search)\n");
@@ -108,10 +108,45 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                     return 1;
                 }
                 
+                printf("[DEBUG] Nalezeny ListBox: 0x%p\n", (void*)listbox);
+                
                 HANDLE hProcess = OpenTwinCatProcess(listbox);
                 if (!hProcess) {
                     printf("[X] Nelze otevrit proces!\n");
                     return 1;
+                }
+                
+                // DEBUG: Ověř první položku v ListBoxu
+                printf("[DEBUG] Overuji prvni polozku v ListBoxu...\n");
+                int itemCount = GetListBoxItemCount(listbox);
+                printf("[DEBUG] Pocet polozek v ListBoxu: %d\n", itemCount);
+                
+                if (itemCount > 0) {
+                    TreeItem firstItem;
+                    if (ExtractTreeItem(hProcess, listbox, 0, &firstItem)) {
+                        printf("[DEBUG] Prvni polozka [0]: '%s' (level %d)\n", 
+                               firstItem.text, firstItem.position);
+                    } else {
+                        printf("[DEBUG] Nelze nacist prvni polozku!\n");
+                    }
+                    
+                    // Zkus i druhů a třetí
+                    if (itemCount > 1) {
+                        TreeItem item;
+                        if (ExtractTreeItem(hProcess, listbox, 1, &item)) {
+                            printf("[DEBUG] Druha polozka [1]: '%s' (level %d)\n", 
+                                   item.text, item.position);
+                        }
+                    }
+                    if (itemCount > 2) {
+                        TreeItem item;
+                        if (ExtractTreeItem(hProcess, listbox, 2, &item)) {
+                            printf("[DEBUG] Treti polozka [2]: '%s' (level %d)\n", 
+                                   item.text, item.position);
+                        }
+                    }
+                } else {
+                    printf("[DEBUG] ListBox je prazdny!\n");
                 }
                 
                 char projectName[256];

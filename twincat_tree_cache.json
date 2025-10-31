@@ -1,6 +1,6 @@
 {
   "project": "POUs",
-  "timestamp": "2025-10-30T07:19:29",
+  "timestamp": "2025-10-31T10:20:08",
   "itemCount": 300,
   "items": [
     {
@@ -9,7 +9,7 @@
       "level": 0,
       "path": "POUs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 1,
@@ -17,7 +17,7 @@
       "level": 1,
       "path": "POUs/pBasic",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 2,
@@ -25,7 +25,7 @@
       "level": 2,
       "path": "POUs/pBasic/PLC_PRG",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 3,
@@ -33,7 +33,7 @@
       "level": 1,
       "path": "POUs/Stations",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 4,
@@ -41,7 +41,7 @@
       "level": 2,
       "path": "POUs/Stations/ST_00",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 5,
@@ -49,7 +49,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_00/ST00__Init",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 6,
@@ -57,7 +57,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00__Init/ST00_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 7,
@@ -65,7 +65,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_00/ST00_FBs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 8,
@@ -73,7 +73,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_FBs/_CallFBs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 9,
@@ -81,7 +81,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_FBs/ST00_CallFBs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 10,
@@ -89,7 +89,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_00/ST00_PRGs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 11,
@@ -97,7 +97,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_PRGs/_CallPRGs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 12,
@@ -105,7 +105,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_PRGs/IOSimulation",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 13,
@@ -113,7 +113,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_PRGs/JobManagement",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 14,
@@ -121,7 +121,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_PRGs/Lights_and_Lamps",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 15,
@@ -129,7 +129,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_PRGs/MachineStates",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 16,
@@ -137,7 +137,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_PRGs/MachineStates/_Message",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 17,
@@ -145,7 +145,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_PRGs/Safety_Fuses_AirPressure",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 18,
@@ -153,7 +153,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_PRGs/ST00_CallPRGs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 19,
@@ -161,7 +161,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_PRGs/ST00_ImpExp_MP",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 20,
@@ -169,7 +169,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_PRGs/VisuLogger",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 21,
@@ -177,7 +177,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_00/ST00_SFCs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 22,
@@ -185,7 +185,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 23,
@@ -193,7 +193,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/CallSpecialModeSFCs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 24,
@@ -201,7 +201,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/SpecialMode01",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 25,
@@ -209,7 +209,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/SpecialMode02",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 26,
@@ -217,7 +217,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/SpecialMode03",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 27,
@@ -225,7 +225,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/SpecialMode04",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 28,
@@ -233,7 +233,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/SpecialMode05",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 29,
@@ -241,7 +241,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/SpecialMode06",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 30,
@@ -249,7 +249,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/SpecialMode07",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 31,
@@ -257,7 +257,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/SpecialMode08",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 32,
@@ -265,7 +265,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_SpecialModeSFCs/SpecialModeMain",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 33,
@@ -273,7 +273,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_SFCs/_CallSFCs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 34,
@@ -281,7 +281,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_SFCs/CheckSFCInInit",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 35,
@@ -289,7 +289,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_SFCs/HomePositionSFC",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 36,
@@ -297,7 +297,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_00/ST00_SFCs/ST00_CallSFCs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 37,
@@ -305,7 +305,7 @@
       "level": 2,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 38,
@@ -313,7 +313,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02__Init",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 39,
@@ -321,7 +321,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02__Init/ST02_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 40,
@@ -329,7 +329,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_FBs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 41,
@@ -337,7 +337,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_FBs/FB_Schwenken",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 42,
@@ -345,7 +345,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_FBs/ST02_CallFBs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 43,
@@ -353,7 +353,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_PRGs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 44,
@@ -361,7 +361,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_PRGs/PushData",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 45,
@@ -369,7 +369,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_PRGs/ST02_CallPRGs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 46,
@@ -377,7 +377,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_PRGs/TurnTable",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 47,
@@ -385,7 +385,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_SFCs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 48,
@@ -393,7 +393,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_SFCs/ST02_AutoStop",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 49,
@@ -401,7 +401,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_SFCs/ST02_CallSFCs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 50,
@@ -409,7 +409,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_SFCs/ST02_HomePosition",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 51,
@@ -417,7 +417,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_02_RT_Tampondrucker/ST02_SFCs/ST02_Main",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 52,
@@ -425,7 +425,7 @@
       "level": 2,
       "path": "POUs/Stations/ST_03_Ruestsaetze",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 53,
@@ -433,7 +433,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 54,
@@ -441,7 +441,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 55,
@@ -449,7 +449,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_120pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 56,
@@ -457,7 +457,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_124pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 57,
@@ -465,7 +465,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_154pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 58,
@@ -473,7 +473,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_154polRP",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 59,
@@ -481,7 +481,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_160pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 60,
@@ -489,7 +489,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_191pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 61,
@@ -497,7 +497,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_206pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 62,
@@ -505,7 +505,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_21pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 63,
@@ -513,7 +513,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_268pol_102pol_neu",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 64,
@@ -521,7 +521,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_268polRP",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 65,
@@ -529,7 +529,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_33pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 66,
@@ -537,7 +537,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_46pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 67,
@@ -545,7 +545,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_48pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 68,
@@ -553,7 +553,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_72pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 69,
@@ -561,7 +561,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_7pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 70,
@@ -569,7 +569,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_88pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 71,
@@ -577,7 +577,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_88polAMG",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 72,
@@ -585,7 +585,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_92pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 73,
@@ -593,7 +593,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_NOX4pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 74,
@@ -601,7 +601,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03__Init/ST03_Init/Init_NOX5_6pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 75,
@@ -609,7 +609,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 76,
@@ -617,7 +617,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 77,
@@ -625,7 +625,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_120pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 78,
@@ -633,7 +633,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_124pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 79,
@@ -641,7 +641,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_154pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 80,
@@ -649,7 +649,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_154polRP",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 81,
@@ -657,7 +657,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_191pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 82,
@@ -665,7 +665,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_206pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 83,
@@ -673,7 +673,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_21pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 84,
@@ -681,7 +681,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_268pol_102pol_neu",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 85,
@@ -689,7 +689,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_268polRP",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 86,
@@ -697,7 +697,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_33pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 87,
@@ -705,7 +705,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_46pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 88,
@@ -713,7 +713,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_48pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 89,
@@ -721,7 +721,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_72pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 90,
@@ -729,7 +729,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_74_91_35_168_160pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 91,
@@ -737,7 +737,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_7pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 92,
@@ -745,7 +745,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_88pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 93,
@@ -753,7 +753,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_88polAMG",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 94,
@@ -761,7 +761,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_92pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 95,
@@ -769,7 +769,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_NOX4pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 96,
@@ -777,7 +777,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallFBs/call_NOX5_6pol",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 97,
@@ -785,7 +785,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_FBs/ST03_CallSFCs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 98,
@@ -793,7 +793,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_PRGs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 99,
@@ -801,7 +801,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_PRGs/ST03_Autostop",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 100,
@@ -809,7 +809,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_PRGs/ST03_Band",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 101,
@@ -817,7 +817,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_PRGs/ST03_Band_alt",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 102,
@@ -825,7 +825,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_PRGs/ST03_CallPRGs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 103,
@@ -833,7 +833,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_PRGs/ST03_Init_AbholPos",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 104,
@@ -841,7 +841,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_PRGs/ST03_Init_Lockings",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 105,
@@ -849,7 +849,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_PRGs/ST03_ManRobotSwivelUnit",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 106,
@@ -857,7 +857,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 107,
@@ -865,7 +865,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 108,
@@ -873,7 +873,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_102pol_neu_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 109,
@@ -881,7 +881,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_102pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 110,
@@ -889,7 +889,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_120pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 111,
@@ -897,7 +897,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_124pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 112,
@@ -905,7 +905,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_154_RP_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 113,
@@ -913,7 +913,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_154pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 114,
@@ -921,7 +921,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_160pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 115,
@@ -929,7 +929,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_191pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 116,
@@ -937,7 +937,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_206pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 117,
@@ -945,7 +945,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_21pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 118,
@@ -953,7 +953,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_268_RP_Wendeeinheit",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 119,
@@ -961,7 +961,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_268_RP_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 120,
@@ -969,7 +969,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_268pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 121,
@@ -977,7 +977,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_33pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 122,
@@ -985,7 +985,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_46pol_Wendeeinheit",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 123,
@@ -993,7 +993,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_46pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 124,
@@ -1001,7 +1001,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_48pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 125,
@@ -1009,7 +1009,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_72pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 126,
@@ -1017,7 +1017,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_7pol_Wendeeinheit",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 127,
@@ -1025,7 +1025,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_7pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 128,
@@ -1033,7 +1033,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_88pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 129,
@@ -1041,7 +1041,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_88polAMG_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 130,
@@ -1049,7 +1049,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_91pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 131,
@@ -1057,7 +1057,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_92pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 132,
@@ -1065,7 +1065,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_9pol_Wendeeinheit",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 133,
@@ -1073,7 +1073,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_NOX_4pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 134,
@@ -1081,7 +1081,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_NOX_5pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 135,
@@ -1089,7 +1089,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/Zufuehrungen/ST03_NOX_6pol_Zufuehrung",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 136,
@@ -1097,7 +1097,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/ST03_HomePosition",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 137,
@@ -1105,7 +1105,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/ST03_IFM_Camera",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 138,
@@ -1113,7 +1113,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/ST03_Main",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 139,
@@ -1121,7 +1121,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_03_Ruestsaetze/ST_03_SFCs/ST03_Test_Parts",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 140,
@@ -1129,7 +1129,7 @@
       "level": 2,
       "path": "POUs/Stations/ST_08_Palettierer",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 141,
@@ -1137,7 +1137,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08__InitFBs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 142,
@@ -1145,7 +1145,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08__InitFBs/ST08_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 143,
@@ -1153,7 +1153,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_CallFBs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 144,
@@ -1161,7 +1161,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_CallFBs/ST08_CallFBs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 145,
@@ -1169,7 +1169,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_Programs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 146,
@@ -1177,7 +1177,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_Programs/ST08_CallPRGs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 147,
@@ -1185,7 +1185,7 @@
       "level": 3,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_SFCs",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 148,
@@ -1193,7 +1193,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_SFCs/Inlett",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 149,
@@ -1201,7 +1201,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_SFCs/Inlett/ST08_VV1_Y50_0",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 150,
@@ -1209,7 +1209,7 @@
       "level": 5,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_SFCs/Inlett/ST08_VV1_Y50_2",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 151,
@@ -1217,7 +1217,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_SFCs/ST08_CallSFCs",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 152,
@@ -1225,7 +1225,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_SFCs/ST08_Depalletizing",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 153,
@@ -1233,7 +1233,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_SFCs/ST08_HomePosition",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 154,
@@ -1241,7 +1241,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_SFCs/ST08_Palletizing",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 155,
@@ -1249,7 +1249,7 @@
       "level": 4,
       "path": "POUs/Stations/ST_08_Palettierer/ST_08_SFCs/ST08_Process",
       "hasChildren": true,
-      "flags": "0x0104C7"
+      "flags": "0x1C90497"
     },
     {
       "index": 156,
@@ -1257,7 +1257,7 @@
       "level": 1,
       "path": "POUs/System",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 157,
@@ -1265,7 +1265,7 @@
       "level": 2,
       "path": "POUs/System/BusDiagnosis",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 158,
@@ -1273,7 +1273,7 @@
       "level": 3,
       "path": "POUs/System/BusDiagnosis/BusDiagnosis",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 159,
@@ -1281,7 +1281,7 @@
       "level": 3,
       "path": "POUs/System/BusDiagnosis/GetAmsNetIdString",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 160,
@@ -1289,7 +1289,7 @@
       "level": 2,
       "path": "POUs/System/Error_and_Message",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 161,
@@ -1297,7 +1297,7 @@
       "level": 3,
       "path": "POUs/System/Error_and_Message/ErrorHandler",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 162,
@@ -1305,7 +1305,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/ErrorHandler/AddError",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 163,
@@ -1313,7 +1313,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/ErrorHandler/ClearAll",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 164,
@@ -1321,7 +1321,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/ErrorHandler/HandleErrors",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 165,
@@ -1329,7 +1329,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/ErrorHandler/VisuUpdate",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 166,
@@ -1337,7 +1337,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/ErrorHandler/WriteErrorLog",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 167,
@@ -1345,7 +1345,7 @@
       "level": 3,
       "path": "POUs/System/Error_and_Message/MessageHandler",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 168,
@@ -1353,7 +1353,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/MessageHandler/ClearAll",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 169,
@@ -1361,7 +1361,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/MessageHandler/ClearMessageLines",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 170,
@@ -1369,7 +1369,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/MessageHandler/DisableMultiSelect",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 171,
@@ -1377,7 +1377,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/MessageHandler/Lng",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 172,
@@ -1385,7 +1385,7 @@
       "level": 4,
       "path": "POUs/System/Error_and_Message/MessageHandler/VisuUpdate",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 173,
@@ -1393,7 +1393,7 @@
       "level": 2,
       "path": "POUs/System/GeneralFunctions",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 174,
@@ -1401,7 +1401,7 @@
       "level": 3,
       "path": "POUs/System/GeneralFunctions/CallGeneralFunctions",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 175,
@@ -1409,7 +1409,7 @@
       "level": 3,
       "path": "POUs/System/GeneralFunctions/ListHomeNOK",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 176,
@@ -1417,7 +1417,7 @@
       "level": 2,
       "path": "POUs/System/HelpFunctions",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 177,
@@ -1425,7 +1425,7 @@
       "level": 3,
       "path": "POUs/System/HelpFunctions/CheckProcTime",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 178,
@@ -1433,7 +1433,7 @@
       "level": 3,
       "path": "POUs/System/HelpFunctions/FB_FileCopy",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 179,
@@ -1441,7 +1441,7 @@
       "level": 3,
       "path": "POUs/System/HelpFunctions/GEN_PULSE",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 180,
@@ -1449,7 +1449,7 @@
       "level": 2,
       "path": "POUs/System/LoginDialog",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 181,
@@ -1457,7 +1457,7 @@
       "level": 3,
       "path": "POUs/System/LoginDialog/ImpExp_UD",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 182,
@@ -1465,7 +1465,7 @@
       "level": 3,
       "path": "POUs/System/LoginDialog/UserLoginHandler",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 183,
@@ -1473,7 +1473,7 @@
       "level": 3,
       "path": "POUs/System/LoginDialog/UserLoginKeypad",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 184,
@@ -1481,7 +1481,7 @@
       "level": 2,
       "path": "POUs/System/MP_ShiftHandler",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 185,
@@ -1489,7 +1489,7 @@
       "level": 3,
       "path": "POUs/System/MP_ShiftHandler/MP_ShiftHandler",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 186,
@@ -1497,7 +1497,7 @@
       "level": 2,
       "path": "POUs/System/MPHandler",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 187,
@@ -1505,7 +1505,7 @@
       "level": 3,
       "path": "POUs/System/MPHandler/MPHandler",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 188,
@@ -1513,7 +1513,7 @@
       "level": 4,
       "path": "POUs/System/MPHandler/MPHandler/DisableMP",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 189,
@@ -1521,7 +1521,7 @@
       "level": 2,
       "path": "POUs/System/TDHandler",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 190,
@@ -1529,7 +1529,7 @@
       "level": 3,
       "path": "POUs/System/TDHandler/TDHandler",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 191,
@@ -1537,7 +1537,7 @@
       "level": 4,
       "path": "POUs/System/TDHandler/TDHandler/DisableTD",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 192,
@@ -1545,7 +1545,7 @@
       "level": 4,
       "path": "POUs/System/TDHandler/TDHandler/Info",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 193,
@@ -1553,7 +1553,7 @@
       "level": 2,
       "path": "POUs/System/VisuInterface",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 194,
@@ -1561,7 +1561,7 @@
       "level": 3,
       "path": "POUs/System/VisuInterface/ModeSelect",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 195,
@@ -1569,7 +1569,7 @@
       "level": 3,
       "path": "POUs/System/VisuInterface/VisuButton",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 196,
@@ -1577,7 +1577,7 @@
       "level": 1,
       "path": "POUs/zLibrary",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 197,
@@ -1585,7 +1585,7 @@
       "level": 2,
       "path": "POUs/zLibrary/_HelpFunctions",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 198,
@@ -1593,7 +1593,7 @@
       "level": 3,
       "path": "POUs/zLibrary/_HelpFunctions/FB_Laufschrift",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 199,
@@ -1601,7 +1601,7 @@
       "level": 3,
       "path": "POUs/zLibrary/_HelpFunctions/FB_Laufschrift_STR255",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 200,
@@ -1609,7 +1609,7 @@
       "level": 2,
       "path": "POUs/zLibrary/AnaIn",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 201,
@@ -1617,7 +1617,7 @@
       "level": 3,
       "path": "POUs/zLibrary/AnaIn/FB_AnaInDint",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 202,
@@ -1625,7 +1625,7 @@
       "level": 3,
       "path": "POUs/zLibrary/AnaIn/FB_Encoder",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 203,
@@ -1633,7 +1633,7 @@
       "level": 2,
       "path": "POUs/zLibrary/CSV_ImportExport",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 204,
@@ -1641,7 +1641,7 @@
       "level": 3,
       "path": "POUs/zLibrary/CSV_ImportExport/CSVExport_AppendLineWithVarConfig",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 205,
@@ -1649,7 +1649,7 @@
       "level": 3,
       "path": "POUs/zLibrary/CSV_ImportExport/DT_TO_SPECIALSTRING",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 206,
@@ -1657,7 +1657,7 @@
       "level": 3,
       "path": "POUs/zLibrary/CSV_ImportExport/TYPEDEF_TO_STRING",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 207,
@@ -1665,7 +1665,7 @@
       "level": 2,
       "path": "POUs/zLibrary/DigIn",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 208,
@@ -1673,7 +1673,7 @@
       "level": 3,
       "path": "POUs/zLibrary/DigIn/FB_DigIn",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 209,
@@ -1681,7 +1681,7 @@
       "level": 2,
       "path": "POUs/zLibrary/DigOutIn",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 210,
@@ -1689,7 +1689,7 @@
       "level": 3,
       "path": "POUs/zLibrary/DigOutIn/FB_DigOutIn",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 211,
@@ -1697,7 +1697,7 @@
       "level": 2,
       "path": "POUs/zLibrary/EpsonRobot",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 212,
@@ -1705,7 +1705,7 @@
       "level": 3,
       "path": "POUs/zLibrary/EpsonRobot/FB_EpsonRobot",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 213,
@@ -1713,7 +1713,7 @@
       "level": 4,
       "path": "POUs/zLibrary/EpsonRobot/FB_EpsonRobot/Collision",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 214,
@@ -1721,7 +1721,7 @@
       "level": 2,
       "path": "POUs/zLibrary/ept",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 215,
@@ -1729,7 +1729,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/Achse",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 216,
@@ -1737,7 +1737,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 217,
@@ -1745,7 +1745,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/Btn_init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 218,
@@ -1753,7 +1753,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/Description",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 219,
@@ -1761,7 +1761,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/sub_connect",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 220,
@@ -1769,7 +1769,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/sub_ctrl",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 221,
@@ -1777,7 +1777,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/sub_fb",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 222,
@@ -1785,7 +1785,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/sub_Pos",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 223,
@@ -1793,7 +1793,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/sub_rec_Torque",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 224,
@@ -1801,7 +1801,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/sub_Regler",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 225,
@@ -1809,7 +1809,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/sub_sdo",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 226,
@@ -1817,7 +1817,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Achse/fb_72x1_Achse/sub_Visu",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 227,
@@ -1825,7 +1825,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Achse/fb_Auto_On_Off",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 228,
@@ -1833,7 +1833,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Achse/GANZE_ZAHL",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 229,
@@ -1841,7 +1841,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/BDE",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 230,
@@ -1849,7 +1849,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/BDE/Fb_ExportHydraString",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 231,
@@ -1857,7 +1857,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/BDE/Fb_ExportHydraString/subr_Dint_to_Hydra_Counter",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 232,
@@ -1865,7 +1865,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/BDE/ST_Hydra8",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 233,
@@ -1873,7 +1873,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/BDE/ST_ImportHydraString",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 234,
@@ -1881,7 +1881,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/Checks",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 235,
@@ -1889,7 +1889,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Checks/CheckBounds",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 236,
@@ -1897,7 +1897,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Checks/CheckDivByte",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 237,
@@ -1905,7 +1905,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Checks/CheckDivDWord",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 238,
@@ -1913,7 +1913,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Checks/CheckDivReal",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 239,
@@ -1921,7 +1921,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Checks/CheckDivWord",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 240,
@@ -1929,7 +1929,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Checks/CheckRangeSigned",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 241,
@@ -1937,7 +1937,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Checks/CheckRangeUnsigned",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 242,
@@ -1945,7 +1945,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/Funktionen",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 243,
@@ -1953,7 +1953,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Funktionen/ET_TO_STRING",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 244,
@@ -1961,7 +1961,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Funktionen/FB_CurrentStepHistorie",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 245,
@@ -1969,7 +1969,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/Funktionsbausteine",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 246,
@@ -1977,7 +1977,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Funktionsbausteine/FB_Blinker",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 247,
@@ -1985,7 +1985,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Funktionsbausteine/FB_ExporString",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 248,
@@ -1993,7 +1993,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Funktionsbausteine/ST_StateEntry",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 249,
@@ -2001,7 +2001,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Funktionsbausteine/ST_StateEntry/subrDebugtext",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 250,
@@ -2009,7 +2009,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/MainMenue",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 251,
@@ -2017,7 +2017,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/MainMenue/FB_Btn",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 252,
@@ -2025,7 +2025,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/MainMenue/ST_MainMenue",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 253,
@@ -2033,7 +2033,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/MainMenue/ST_MainMenue/MainMenue_Btn_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 254,
@@ -2041,7 +2041,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/min_exit",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 255,
@@ -2049,7 +2049,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/min_exit/ST_MinExit",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 256,
@@ -2057,7 +2057,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/Programmbausteine",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 257,
@@ -2065,7 +2065,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Programmbausteine/ST_CPU",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 258,
@@ -2073,7 +2073,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Programmbausteine/ST_UPS",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 259,
@@ -2081,7 +2081,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/Service",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 260,
@@ -2089,7 +2089,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Service/_CallInit",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 261,
@@ -2097,7 +2097,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Service/FB_Betriebsstundenzaehler",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 262,
@@ -2105,7 +2105,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Service/ST_BBGenXMLFile",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 263,
@@ -2113,7 +2113,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Service/ST_Service",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 264,
@@ -2121,7 +2121,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Service/ST_Service/Button_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 265,
@@ -2129,7 +2129,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Service/ST_Service/Reset",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 266,
@@ -2137,7 +2137,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Service/ST_Service/Umschalten",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 267,
@@ -2145,7 +2145,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/Sprache",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 268,
@@ -2153,7 +2153,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Sprache/FB_ReadXmlLine",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 269,
@@ -2161,7 +2161,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Sprache/ST_Lng",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 270,
@@ -2169,7 +2169,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Sprache/ST_Lng/Btn_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 271,
@@ -2177,7 +2177,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Sprache/ST_ReadXmlLine",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 272,
@@ -2185,7 +2185,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Sprache/ST_ReadXmlLine/LockFree",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 273,
@@ -2193,7 +2193,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Sprache/ST_ReadXmlLine/LockGet",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 274,
@@ -2201,7 +2201,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Sprache/ST_ReadXmlLineMsg",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 275,
@@ -2209,7 +2209,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Sprache/ST_ReadXmlLineMsg/LockFree",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 276,
@@ -2217,7 +2217,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Sprache/ST_ReadXmlLineMsg/LockGet",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 277,
@@ -2225,7 +2225,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/Sprache/ST_SwitchLng",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 278,
@@ -2233,7 +2233,7 @@
       "level": 5,
       "path": "POUs/zLibrary/ept/Sprache/ST_SwitchLng/Btn_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 279,
@@ -2241,7 +2241,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/ST_AutoCheckIn",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 280,
@@ -2249,7 +2249,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/ST_Path",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 281,
@@ -2257,7 +2257,7 @@
       "level": 3,
       "path": "POUs/zLibrary/ept/ST_SaveAndLoad",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 282,
@@ -2265,7 +2265,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/ST_SaveAndLoad/Btn_init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 283,
@@ -2273,7 +2273,7 @@
       "level": 4,
       "path": "POUs/zLibrary/ept/ST_SaveAndLoad/CallPrg",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 284,
@@ -2281,7 +2281,7 @@
       "level": 2,
       "path": "POUs/zLibrary/Keyence",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 285,
@@ -2289,7 +2289,7 @@
       "level": 3,
       "path": "POUs/zLibrary/Keyence/FB_KeyenceEtherCat",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 286,
@@ -2297,7 +2297,7 @@
       "level": 4,
       "path": "POUs/zLibrary/Keyence/FB_KeyenceEtherCat/Btn_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 287,
@@ -2305,7 +2305,7 @@
       "level": 4,
       "path": "POUs/zLibrary/Keyence/FB_KeyenceEtherCat/Control",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 288,
@@ -2313,7 +2313,7 @@
       "level": 4,
       "path": "POUs/zLibrary/Keyence/FB_KeyenceEtherCat/ErrorHandling",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 289,
@@ -2321,7 +2321,7 @@
       "level": 2,
       "path": "POUs/zLibrary/Sensopart",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 290,
@@ -2329,7 +2329,7 @@
       "level": 3,
       "path": "POUs/zLibrary/Sensopart/FB_Sensopart",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 291,
@@ -2337,7 +2337,7 @@
       "level": 3,
       "path": "POUs/zLibrary/Sensopart/FB_SensopartEthernet",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 292,
@@ -2345,7 +2345,7 @@
       "level": 4,
       "path": "POUs/zLibrary/Sensopart/FB_SensopartEthernet/Btn_Init",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 293,
@@ -2353,7 +2353,7 @@
       "level": 4,
       "path": "POUs/zLibrary/Sensopart/FB_SensopartEthernet/Command",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 294,
@@ -2361,7 +2361,7 @@
       "level": 4,
       "path": "POUs/zLibrary/Sensopart/FB_SensopartEthernet/ErrorHandling",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 295,
@@ -2369,7 +2369,7 @@
       "level": 2,
       "path": "POUs/zLibrary/Valve",
       "hasChildren": true,
-      "flags": "0x0204C5"
+      "flags": "0x13075F"
     },
     {
       "index": 296,
@@ -2377,7 +2377,7 @@
       "level": 3,
       "path": "POUs/zLibrary/Valve/FB_Valve",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 297,
@@ -2385,7 +2385,7 @@
       "level": 4,
       "path": "POUs/zLibrary/Valve/FB_Valve/AddInitSensor",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 298,
@@ -2393,7 +2393,7 @@
       "level": 4,
       "path": "POUs/zLibrary/Valve/FB_Valve/AddWorkSensor",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     },
     {
       "index": 299,
@@ -2401,7 +2401,7 @@
       "level": 3,
       "path": "POUs/zLibrary/Valve/FB_ValveSensor",
       "hasChildren": true,
-      "flags": "0x0404AB"
+      "flags": "0x2610529"
     }
   ]
 }
