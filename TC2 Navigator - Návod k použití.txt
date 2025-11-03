@@ -2,40 +2,62 @@
 
 ## Co to dělá?
 
-Aplikace umožňuje **rychle najít a otevřít libovolný POU v TwinCAT 2 pomocí klávesové zkratky**, bez klikání myší po Project Explorer stromu.
+Aplikace umožňuje **rychle najít a otevřít libovolný POU v TwinCAT 2 pomocí klávesové zkratky** Ctrl+Shift+A, bez klikání myší po Project Explorer stromu.
 
-## Jak to použít?
+---
 
-1. **Spusť `TC2_navigator.exe`** - aplikace se skryje na pozadí
-2. **Otevři TwinCAT 2 projekt** (PLC Control nebo System Manager)
-3. **Otevři nějaký POU** (např. MAIN nebo ST_Funkce) - titulek okna se změní
-4. **Stiskni `Ctrl+Shift+A`** - aplikace automaticky najde a označí tento POU v Project Explorer
+## Rychlý start
 
-## Co se stane při prvním spuštění?
+1. **Spusť `TC2_navigator.exe`** - aplikace běží na pozadí
+2. **Otevři TwinCAT 2 projekt** (PLC Control)
+3. **Otevři nějaký POU** (např. MAIN) - titulek okna se změní
+4. **Stiskni `Ctrl+Shift+A`** - aplikace automaticky najde tento POU v Project Explorer
 
-- Aplikace **načte celý projekt** do cache souboru `twincat_tree_cache.json` (~5-10 sekund)
-- Další spuštění jsou **okamžitá** - pracuje se z cache
+---
 
-## Kdy smazat cache?
+## ⚠️ Důležité upozornění - První spuštění
 
-Pokud změníš strukturu projektu (přidáš/odstraníš POU, přejmenujete složky), smaž soubor `twincat_tree_cache.json` a restartuj aplikaci.
+Při prvním spuštění aplikace vytvoří cache projektu (~5-10 sekund):
+
+**BĚHEM GENEROVÁNÍ CACHE:**
+- ❌ **NEMINIMALIZUJ** TwinCAT okno
+- ❌ **NEKLIKEJ** nikam v Project Explorer
+- ✅ **POČKEJ** dokud se nedokončí soubor `twincat_tree_cache.json`
+
+Aplikace automaticky:
+1. Otevře všechny složky v projektu
+2. Načte kompletní strukturu
+3. Uloží do JSON souboru
+4. Zavře všechny složky zpět
+
+**Další spuštění jsou okamžitá** - pracuje se z cache.
+
+---
 
 ## Klávesové zkratky
 
 - **`Ctrl+Shift+A`** - Navigovat na aktuální POU
-- **`Ctrl+Alt+ESC`** - Ukončit aplikaci
+- **`Ctrl+Shift+Q`** - Ukončit aplikaci
+
+---
+
+## Kdy smazat cache?
+
+Pokud změníš strukturu projektu (přidáš/odstraníš POU, přejmenujete složky):
+1. Smaž soubor `twincat_tree_cache.json`
+2. Restartuj `TC2_navigator.exe`
+3. Počkej na nové generování cache
+
+---
 
 ## Řešení problémů
+
+**Navigace nefunguje po minimalizaci:**
+- Před použitím `Ctrl+Shift+A` vždy **obnov (restore) TwinCAT okno**
+- Minimalizované okno způsobuje desynchronizaci cache
 
 **Aplikace nenajde TwinCAT okno:**
 - Zkontroluj, že TwinCAT PLC Control běží a má otevřený projekt
 
-**Navigace nefunguje:**
-- Smaž `twincat_tree_cache.json` a nech aplikaci přegenerovat cache
-
-**Program spadne:**
-- Spusť jako administrátor (pravý klik → "Run as Administrator")
-
----
 
 **Hotovo!** Nyní můžeš rychle navigovat v TwinCAT bez myši. 🚀

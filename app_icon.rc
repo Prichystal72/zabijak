@@ -1,0 +1,4 @@
+// Resource file pro TC2 Navigator ikonu
+#define IDI_ICON1 101
+
+IDI_ICON1 ICON "ico\\icona32.ico"

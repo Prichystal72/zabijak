@@ -38,7 +38,29 @@ Aplikace běží na pozadí a zachytává globální klávesové zkratky.
 ### 4. Klávesové zkratky
 
 - **`Ctrl+Shift+A`** - Navigovat na aktuální POU (podle titulku okna)
-- **`Ctrl+Alt+ESC`** - Ukončit aplikaci
+- **`Ctrl+Shift+Q`** - Ukončit aplikaci
+
+---
+
+## ⚠️ Důležitá upozornění
+
+### Při prvním spuštění (generování cache)
+- **NEMINIMALIZUJ TwinCAT okno** - cache se musí vytvořit při viditelném Project Explorer
+- **NEKLIKEJ nikam během generování** - aplikace automaticky prochází celý strom projektu
+- **POČKEJ dokud se nedokončí JSON soubor** (`twincat_tree_cache.json`)
+- **Trvá ~5-10 sekund** podle velikosti projektu
+
+Aplikace během generování:
+1. Otevře všechny složky v projektu (POUs, GVLs, Function Blocks...)
+2. Načte kompletní strukturu do paměti
+3. Uloží do JSON souboru
+4. Zavře všechny složky zpět
+5. Provede POUs reset (dvojité kliknutí pro synchronizaci)
+
+### Problémy s minimalizovaným oknem
+- **Chyba při minimalizaci:** Pokud je TwinCAT okno minimalizované během navigace, může dojít k desynchronizaci cache indexů
+- **Řešení:** Před použitím `Ctrl+Shift+A` vždy obnovte (restore) TwinCAT okno
+- Aplikace provádí automatický POUs reset před navigací pro synchronizaci stavu
 
 ---
 

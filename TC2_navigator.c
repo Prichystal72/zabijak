@@ -177,22 +177,22 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                 }
                 
                 // Test odznaceni - LB_SETTOPINDEX
-                printf("\n=== TEST: Pokus o odznaceni ===\n");
+                /*printf("\n=== TEST: Pokus o odznaceni ===\n");
                 printf("Nastavuji LB_SETTOPINDEX na 0...\n");
                 SendMessage(listbox, LB_SETTOPINDEX, 2, 0);
                 Sleep(50);
                 printf("Nastavuji LB_SETCURSEL na -1...\n");
                 SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
                 Sleep(50);
-                printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");
+                printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");*/
                 
                 printf("\n=== TEST: Pokus o odznaceni ===\n");
                 printf("Nastavuji LB_SETTOPINDEX na 0...\n");
-                SendMessage(listbox, LB_SETTOPINDEX, 2, 0);
+                /*SendMessage(listbox, LB_SETTOPINDEX, 2, 0);
                 Sleep(50);
                 printf("Nastavuji LB_SETCURSEL na -1...\n");
                 SendMessage(listbox, LB_SETCURSEL, (WPARAM)-1, 0);
-                Sleep(50);
+                Sleep(50);*/
                 printf("[OK] Prikazy odeslany - zkontroluj vizualne!\n");
                 
                 printf("\n===================================================\n");
@@ -201,8 +201,7 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                 printf("Celkem polozek v cache: %d\n", g_cacheSize);
                 printf("===================================================\n");
                 
-                printf("[TODO] TwinCAT navigation will be implemented here\n");
-                
+                // KROK 2: Extrahuj nazev z titulku okna              
                 char windowTitle[512];
                 GetWindowText(twincatWindow, windowTitle, sizeof(windowTitle));
                 
@@ -214,7 +213,13 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                     printf("✓ Extrahovaný název: '%s'\n", target);
                     // TODO: Implementace navigace podle extrahovaného názvu
                     printf("\nHledam polozku: %s\n", target);
-                    
+
+                    // Reset POUs - double click na pozici 10,10
+                    SendMessage(listbox, WM_LBUTTONDBLCLK, 0, MAKELPARAM(10, 10));
+                    Sleep(500);
+                    SendMessage(listbox, WM_LBUTTONDBLCLK, 0, MAKELPARAM(10, 10));
+                    Sleep(500);
+
                     // Zavolej funkci hledani
                     int foundIndex = FindAndExpandPath(listbox, hProcess, target);
                     
@@ -227,16 +232,16 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
                         printf("\n[AKCE] Focusuji polozku v TwinCAT okne...\n");
                         
                         // 1. Aktivuj TwinCAT okno
-                        SetForegroundWindow(twincatWindow);
-                        Sleep(1000);
+                        /*SetForegroundWindow(twincatWindow);
+                        Sleep(1000);*/
                         
                         // 2. Zamer na ListBox
-                        SetFocus(listbox);
-                        Sleep(1000);
+                        //SetFocus(listbox);
+                        //Sleep(10);
 
                         // 3. Vyber polozku
                         LRESULT result = SendMessage(listbox, LB_SETCURSEL, foundIndex, 0);
-                        Sleep(100);
+                        Sleep(10);
                         
                         if (result == LB_ERR) {
                             printf("[X] Nelze vybrat polozku (LB_SETCURSEL vratilo LB_ERR)\n");
